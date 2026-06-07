@@ -162,6 +162,10 @@ def main(argv=None) -> int:
     _print_table(df, args.top)
 
     if args.out:
+        import os
+        d = os.path.dirname(args.out)
+        if d:
+            os.makedirs(d, exist_ok=True)
         df.to_csv(args.out, index=False)
         print(f"\nSaved {len(df):,} rows -> {args.out}")
     else:
