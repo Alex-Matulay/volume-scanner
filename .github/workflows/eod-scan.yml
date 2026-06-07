@@ -1,0 +1,58 @@
+name: EOD Volume Scan
+
+on:
+  schedule:
+    # 22:00 UTC on weekdays = ~6pm ET (after the US close, once EOD data settles).
+    - cron: "0 22 * * 1-5"
+  workflow_dispatch: {}   # allow manual "Run workflow" from the Actions tab
+
+# Permissions the GitHub Pages deployment needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deployments at once.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r volume_scanner/requirements.txt
+
+      - name: Run end-of-day scan and build the page
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+        run: |
+          python -m volume_scanner.cli \
+            --source alpaca --market us \
+            --min-rvol 3 --min-dollar-vol 1000000 \
+            --html site/index.html --out site/report.csv
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: scan
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

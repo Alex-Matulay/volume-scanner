@@ -1,0 +1,15 @@
+# Generated scan reports / built site
+volume_scan_*.csv
+*.csv
+site/
+
+# Cached US symbol directory (refreshes on demand)
+volume_scanner/data/us_symbols.csv
+
+# Alpaca API credentials — NEVER commit (use GitHub Actions Secrets instead)
+volume_scanner/data/alpaca_keys.json
+volume_scanner/data/
+
+# Python
+__pycache__/
+*.pyc
