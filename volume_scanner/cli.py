@@ -28,17 +28,20 @@ def _print_table(df, top: int) -> None:
         print("\nNo stocks matched the filters.")
         return
     view = df.head(top)
+    has_earn = "earnings_note" in df.columns
+    note_col = "earnings_note" if has_earn else "notes"
     # Order requested: avg volume, that day's volume, previous day, 10-day avg,
-    # then RVOL, open, close, % change, notes.
+    # then RVOL, open, close, % change, notes (earnings note if available).
     cols = ["symbol", "date", "avg_volume", "last_volume", "prev_volume",
-            "avg_volume_10d", "rvol", "open", "close", "pct_change", "notes"]
+            "avg_volume_10d", "rvol", "open", "close", "pct_change", note_col]
     labels = {"symbol": "symbol", "date": "date", "avg_volume": "avg_vol",
               "last_volume": "day_vol", "prev_volume": "prev_vol",
               "avg_volume_10d": "avg_vol_10d", "rvol": "rvol", "open": "open",
-              "close": "close", "pct_change": "%chg", "notes": "notes"}
+              "close": "close", "pct_change": "%chg", "notes": "notes",
+              "earnings_note": "earnings"}
     widths = {"symbol": 9, "date": 19, "avg_volume": 14, "last_volume": 14,
               "prev_volume": 14, "avg_volume_10d": 14, "rvol": 7, "open": 10,
-              "close": 10, "pct_change": 9, "notes": 28}
+              "close": 10, "pct_change": 9, "notes": 28, "earnings_note": 52}
     header = "".join(labels[c].ljust(widths[c]) for c in cols)
     print("\n" + header)
     print("-" * len(header))
@@ -54,7 +57,7 @@ def _print_table(df, top: int) -> None:
             + f"{r['open']:.2f}".ljust(widths["open"])
             + f"{r['close']:.2f}".ljust(widths["close"])
             + f"{r['pct_change']:+.2f}%".ljust(widths["pct_change"])
-            + str(r.get("notes", "")).ljust(widths["notes"])
+            + str(r.get(note_col, "")).ljust(widths[note_col])
         )
         print(line)
 
@@ -94,6 +97,10 @@ def main(argv=None) -> int:
     p.add_argument("--intraday-period", default="10d",
                    help="Intraday history window (5m bars: max ~60d).")
     p.add_argument("--include-etfs", action="store_true", help="Include US ETFs.")
+    p.add_argument("--earnings", action="store_true",
+                   help="After scanning, look up each flagged stock's latest "
+                        "quarterly earnings and flag record-quarter results "
+                        "(revenue high, YoY growth, EPS surprise, earnings date).")
     p.add_argument("--top", type=int, default=25, help="Rows to print.")
     p.add_argument("--out", help="Write full results to this CSV path.")
     p.add_argument("--html", help="Write a static HTML report (with Yahoo chart "
@@ -158,6 +165,19 @@ def main(argv=None) -> int:
         return 2
     elapsed = time.time() - start
     print(f"\nDone in {elapsed:.0f}s. {len(df):,} stocks with unusual volume.")
+
+    if args.earnings and not df.empty:
+        from . import earnings as earnings_mod
+
+        def eprog(done, total):
+            print(f"  earnings {done:,}/{total:,}", end="\r", flush=True)
+
+        print("Checking quarterly earnings for flagged stocks...", flush=True)
+        df = earnings_mod.annotate(df, pause=0.0, progress=eprog)
+        n_rec = int(df["record_quarter"].fillna(False).sum())
+        n_near = int(df["near_spike"].fillna(False).sum())
+        print(f"\n  {n_rec} with record-quarter revenue; "
+              f"{n_near} spiked right after earnings.")
 
     _print_table(df, args.top)
 

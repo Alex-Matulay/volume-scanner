@@ -38,6 +38,9 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
     stamp = generated_at.strftime("%Y-%m-%d %H:%M UTC")
     n = 0 if df is None else len(df)
 
+    has_earn = df is not None and "earnings_note" in df.columns
+    n_cols = 12 if has_earn else 11
+
     rows_html = []
     if df is not None and not df.empty:
         for _, r in df.iterrows():
@@ -51,6 +54,18 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
             cls = "up" if pct_f > 0 else ("down" if pct_f < 0 else "flat")
             pct_str = f"{pct_f:+.2f}%"
             note = html.escape(str(r.get("notes", "") or ""))
+            earn_cell = ""
+            if has_earn:
+                etxt = html.escape(str(r.get("earnings_note", "") or ""))
+                record = bool(r.get("record_quarter"))
+                near = bool(r.get("near_spike"))
+                ecls = "earn"
+                if record:
+                    ecls += " record"
+                elif near:
+                    ecls += " near"
+                badge = "\U0001F525 " if record else ("⚡ " if near else "")
+                earn_cell = f'<td class="{ecls}">{badge}{etxt}</td>'
             rows_html.append(
                 "<tr>"
                 f'<td class="sym"><a href="{url}" target="_blank" rel="noopener">{html.escape(sym)} ↗</a></td>'
@@ -64,12 +79,14 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
                 f'<td class="num">{_fmt_num(r.get("close"))}</td>'
                 f'<td class="num {cls}">{pct_str}</td>'
                 f'<td class="note">{note}</td>'
+                f'{earn_cell}'
                 "</tr>"
             )
     body_rows = "\n".join(rows_html) or (
-        '<tr><td colspan="11" class="empty">No stocks matched the filters '
+        f'<tr><td colspan="{n_cols}" class="empty">No stocks matched the filters '
         "for this run.</td></tr>"
     )
+    earn_header = "<th>Earnings</th>" if has_earn else ""
 
     return f"""<!doctype html>
 <html lang="en">
@@ -101,6 +118,9 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
   .down {{ color: #f87171; }}
   .flat {{ color: #9aa4b2; }}
   .note {{ color: #8b94a3; font-size: .8rem; }}
+  .earn {{ color: #b6c0cf; font-size: .8rem; white-space: normal; min-width: 22rem; }}
+  .earn.record {{ color: #ffd479; font-weight: 600; }}
+  .earn.near {{ color: #7dd3fc; }}
   .empty {{ text-align: center; color: #9aa4b2; padding: 2rem; }}
   footer {{ margin-top: 1rem; color: #6b7280; font-size: .78rem; }}
   a.ext {{ color: #6ea8fe; }}
@@ -130,6 +150,7 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
         <th class="num">Close</th>
         <th class="num">% chg</th>
         <th>Notes</th>
+        {earn_header}
       </tr>
     </thead>
     <tbody>

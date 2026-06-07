@@ -39,6 +39,7 @@ jobs:
           python -m volume_scanner.cli \
             --source alpaca --market us \
             --min-rvol 3 --min-dollar-vol 1000000 \
+            --earnings \
             --html site/index.html --out site/report.csv
 
       - name: Upload Pages artifact
