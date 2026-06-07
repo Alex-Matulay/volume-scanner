@@ -63,7 +63,10 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
     )
 
     has_earn = df is not None and "earnings_note" in df.columns
-    n_cols = 12 + (1 if has_earn else 0)  # symbol..vol-vs-avg (+earnings)
+    # Intraday drops the point-in-time price columns (close/%chg/range/vol-vs-avg)
+    # since they keep changing through the session; it keeps the volume metrics.
+    base_cols = 8 if intraday else 12  # symbol..open (+price cols for EOD)
+    n_cols = base_cols + (1 if has_earn else 0)
 
     rows_html = []
     if df is not None and not df.empty:
@@ -95,6 +98,14 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
                     ecls += " near"
                 badge = "\U0001F525 " if record else ("⚡ " if near else "")
                 earn_cell = f'<td class="{ecls}">{badge}{etxt}</td>'
+            # Intraday omits the point-in-time price columns (close/%chg/range/
+            # vol-vs-avg) since they keep moving through the session.
+            price_cells = "" if intraday else (
+                f'<td class="num">{_fmt_num(r.get("close"))}</td>'
+                f'<td class="num {cls}">{pct_str}</td>'
+                f'<td class="num">{rng_str}</td>'
+                f'<td class="num">{volx_str}</td>'
+            )
             rows_html.append(
                 "<tr>"
                 f'<td class="sym"><a href="{url}" target="_blank" rel="noopener">{html.escape(sym)} ↗</a></td>'
@@ -105,10 +116,7 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
                 f'<td class="num">{_fmt_int(r.get("prev_volume"))}</td>'
                 f'<td class="num">{_fmt_int(r.get("avg_volume_10d"))}</td>'
                 f'<td class="num">{_fmt_num(r.get("open"))}</td>'
-                f'<td class="num">{_fmt_num(r.get("close"))}</td>'
-                f'<td class="num {cls}">{pct_str}</td>'
-                f'<td class="num">{rng_str}</td>'
-                f'<td class="num">{volx_str}</td>'
+                f'{price_cells}'
                 f'{earn_cell}'
                 "</tr>"
             )
@@ -117,6 +125,12 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
         "for this run.</td></tr>"
     )
     earn_header = "<th>Earnings</th>" if has_earn else ""
+    price_headers = "" if intraday else (
+        '<th class="num">Close</th>'
+        '<th class="num">% chg</th>'
+        '<th class="num">Range</th>'
+        '<th class="num">Vol vs avg</th>'
+    )
 
     # Legend: a short explanation of every column, shown above the table.
     if intraday:
@@ -129,10 +143,7 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
             ("Day vol", "Today's cumulative volume so far."),
             ("Prev-day vol", "Previous session's cumulative volume by this time-of-day."),
             ("Avg vol 10d", "Last 10 sessions' average volume by this time-of-day."),
-            ("Open / Close", "Today's open and latest price."),
-            ("% chg", "Latest price vs. the previous day's close."),
-            ("Range", "Today's high-low swing so far as % of price — intraday volatility."),
-            ("Vol vs avg", "That swing vs. the stock's average full-day range (2× = twice as volatile as usual)."),
+            ("Open", "Today's opening price."),
         ]
     else:
         legend_items = [
@@ -234,10 +245,7 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
         <th class="num">Prev-day vol</th>
         <th class="num">Avg vol 10d</th>
         <th class="num">Open</th>
-        <th class="num">Close</th>
-        <th class="num">% chg</th>
-        <th class="num">Range</th>
-        <th class="num">Vol vs avg</th>
+        {price_headers}
         {earn_header}
       </tr>
     </thead>

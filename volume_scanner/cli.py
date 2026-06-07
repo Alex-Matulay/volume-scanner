@@ -66,7 +66,7 @@ def _print_legend(has_earn: bool) -> None:
         print(f"  {name.ljust(13)} {desc}")
 
 
-def _print_table(df, top: int) -> None:
+def _print_table(df, top: int, intraday: bool = False) -> None:
     if df.empty:
         print("\nNo stocks matched the filters.")
         return
@@ -74,8 +74,10 @@ def _print_table(df, top: int) -> None:
     has_earn = "earnings_note" in df.columns
     _print_legend(has_earn)
     cols = ["symbol", "date", "avg_volume", "last_volume", "prev_volume",
-            "avg_volume_10d", "rvol", "open", "close", "pct_change",
-            "day_range_pct", "range_vs_avg"]
+            "avg_volume_10d", "rvol", "open"]
+    # Intraday drops the point-in-time price columns (they shift through the day).
+    if not intraday:
+        cols += ["close", "pct_change", "day_range_pct", "range_vs_avg"]
     if has_earn:
         cols.append("earnings_note")
     labels = {"symbol": "symbol", "date": "date", "avg_volume": "avg_vol",
@@ -100,11 +102,14 @@ def _print_table(df, top: int) -> None:
             + _fmt_int(r["avg_volume_10d"]).ljust(widths["avg_volume_10d"])
             + f"{r['rvol']:.2f}".ljust(widths["rvol"])
             + f"{r['open']:.2f}".ljust(widths["open"])
-            + f"{r['close']:.2f}".ljust(widths["close"])
-            + f"{r['pct_change']:+.2f}%".ljust(widths["pct_change"])
-            + _fmt_pct(r.get("day_range_pct")).ljust(widths["day_range_pct"])
-            + _fmt_x(r.get("range_vs_avg")).ljust(widths["range_vs_avg"])
         )
+        if not intraday:
+            line += (
+                f"{r['close']:.2f}".ljust(widths["close"])
+                + f"{r['pct_change']:+.2f}%".ljust(widths["pct_change"])
+                + _fmt_pct(r.get("day_range_pct")).ljust(widths["day_range_pct"])
+                + _fmt_x(r.get("range_vs_avg")).ljust(widths["range_vs_avg"])
+            )
         if has_earn:
             line += str(r.get("earnings_note", "")).ljust(widths["earnings_note"])
         print(line)
@@ -231,7 +236,7 @@ def main(argv=None) -> int:
         print(f"\n  {n_rec} with record-quarter revenue; "
               f"{n_near} spiked right after earnings.")
 
-    _print_table(df, args.top)
+    _print_table(df, args.top, intraday=args.intraday)
 
     if args.out:
         import os

@@ -39,7 +39,7 @@ jobs:
           python -m volume_scanner.cli \
             --source alpaca --market us --intraday \
             --intraday-interval 5m --intraday-period 10d \
-            --min-rvol 3 --min-dollar-vol 0 --min-avg-vol 0 --no-enrich \
+            --min-rvol 3 --min-dollar-vol 1000000 \
             --html site/intraday.html --out site/intraday.csv
 
       - name: Publish intraday page to gh-pages
