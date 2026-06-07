@@ -297,6 +297,11 @@ def _run(tickers, cfg, intraday, progress) -> pd.DataFrame:
                     print(f"\n  Re-measuring {len(cand_syms):,} candidates on accurate "
                           f"consolidated volume (yfinance)...", flush=True)
                 ycfg = replace(cfg, source="yfinance")
+                if intraday:
+                    # The new intraday RVOL averages full-day volume over ~20 prior
+                    # sessions, so widen the window for the (few) candidates we
+                    # re-measure. The universe-wide screen stays on the short window.
+                    ycfg = replace(ycfg, intraday_period="1mo")
                 us_part = _scan_engine(cand_syms, ycfg, intraday, None)
                 if not us_part.empty:
                     us_part["notes"] = "yfinance (consolidated)"
@@ -383,27 +388,31 @@ def _intraday_metrics(df: pd.DataFrame, ticker: str, cfg: ScanConfig) -> dict | 
     if today_cum <= 0:
         return None
 
-    # Cumulative volume by the same time-of-day on each prior session.
-    baseline: list[float] = []
-    for d in days[:-1]:
-        g = work[(work["day"] == d) & (work["tod"] <= as_of)]
-        if not g.empty:
-            baseline.append(float(g["cum"].iloc[-1]))
-    if len(baseline) < 3:
+    # Baseline = the average FULL-DAY volume over prior complete sessions, so the
+    # RVOL denominator matches the end-of-day scan's 20-day average daily volume.
+    prior_totals = (
+        work[work["day"] != today]
+        .groupby("day")["vol"].sum()
+        .reindex(days[:-1])
+        .dropna()
+    )
+    if len(prior_totals) < 3:
         return None
-
-    s = pd.Series(baseline)
-    avg = float(s.mean())
-    std = float(s.std())
-    avg10 = float(s.iloc[-10:].mean())  # last 10 sessions at this time-of-day
+    base = prior_totals.iloc[-cfg.lookback_days:]   # up to the last 20 sessions
+    avg = float(base.mean())                          # 20-day average DAILY volume
+    std = float(base.std())
+    avg10 = float(prior_totals.iloc[-10:].mean())     # 10-day average daily volume
     if avg <= 0:
         return None
 
-    prev_cum = baseline[-1]  # previous session's cumulative at this time-of-day
+    prev_full = float(prior_totals.iloc[-1])          # previous session's full-day volume
     prev_rows = work[work["day"] == prev_day]
     prev_close = float(prev_rows["close"].iloc[-1]) if not prev_rows.empty else last_close
     pct_change = (last_close / prev_close - 1.0) * 100.0 if prev_close else float("nan")
 
+    # Intraday RVOL: today's cumulative volume SO FAR vs. a normal full day.
+    # It builds through the session — 3x means today has already traded 3x a
+    # normal day's volume, and at the close it converges with the EOD scan.
     rvol = today_cum / avg
     zscore = (today_cum - avg) / std if std > 0 else float("nan")
     dollar_vol = today_cum * last_close
@@ -443,7 +452,7 @@ def _intraday_metrics(df: pd.DataFrame, ticker: str, cfg: ScanConfig) -> dict | 
         "date": f"{today.isoformat()} {as_of}",
         "avg_volume": int(avg),
         "last_volume": int(today_cum),
-        "prev_volume": int(prev_cum),
+        "prev_volume": int(prev_full),
         "avg_volume_10d": int(avg10),
         "rvol": round(rvol, 2),
         "open": round(last_open, 4),

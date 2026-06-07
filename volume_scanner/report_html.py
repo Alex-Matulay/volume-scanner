@@ -47,10 +47,11 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
     page_title = "Intraday Volume Scanner" if intraday else "Unusual Volume Scanner"
     page_emoji = "⚡" if intraday else "\U0001F4C8"
     if intraday:
-        blurb = ("Live during the US session: today's cumulative volume vs. the "
-                 "average for the same time-of-day. Candidates are screened fast, "
-                 "then re-measured on consolidated volume — figures match "
-                 "TradingView / brokers.")
+        blurb = ("Live during the US session: today's cumulative volume so far vs. "
+                 "the 20-day average daily volume — so RVOL builds through the day "
+                 "(3× = already 3× a normal full day) and converges with the daily "
+                 "scan at the close. Figures are consolidated (match TradingView / "
+                 "brokers).")
     else:
         blurb = ('Volume is end-of-day; figures tagged "consolidated" match '
                  "Yahoo / brokers.")
@@ -137,12 +138,13 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
         legend_items = [
             ("Symbol", "Ticker (click to open its Yahoo Finance chart)."),
             ("Date", "Trading day and time-of-day the snapshot was taken."),
-            ("RVOL", "Today's cumulative volume so far / the average cumulative "
-                     "volume by this same time-of-day (3× = 3× the usual pace)."),
-            ("Avg vol", "Average cumulative volume by this time-of-day — the RVOL baseline."),
+            ("RVOL", "Today's cumulative volume so far / the 20-day average daily "
+                     "volume. Builds through the session — 3× = already 3× a normal "
+                     "full day's volume (converges with the daily scan at the close)."),
+            ("Avg vol", "20-day average daily volume — the RVOL baseline."),
             ("Day vol", "Today's cumulative volume so far."),
-            ("Prev-day vol", "Previous session's cumulative volume by this time-of-day."),
-            ("Avg vol 10d", "Last 10 sessions' average volume by this time-of-day."),
+            ("Prev-day vol", "Previous session's full-day volume."),
+            ("Avg vol 10d", "Trailing 10-day average daily volume."),
             ("Open", "Today's opening price."),
         ]
     else:
