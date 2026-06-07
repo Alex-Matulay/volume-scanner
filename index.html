@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unusual Volume Scanner</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+         margin: 0; padding: 1.5rem; background: #0f1115; color: #e6e6e6; }
+  h1 { margin: 0 0 .25rem; font-size: 1.4rem; }
+  nav.tabs { display: flex; gap: .5rem; margin: .25rem 0 .9rem; }
+  nav.tabs a { padding: .35rem .8rem; border-radius: 999px; text-decoration: none;
+                font-size: .85rem; font-weight: 600; color: #9aa4b2;
+                border: 1px solid #232733; background: #12151c; }
+  nav.tabs a:hover { color: #cfd6e0; border-color: #2c3140; }
+  nav.tabs a.active { color: #0f1115; background: #6ea8fe; border-color: #6ea8fe; }
+  .meta { color: #9aa4b2; font-size: .85rem; margin-bottom: 1rem; }
+  .meta b { color: #cfd6e0; }
+  .wrap { overflow-x: auto; border: 1px solid #232733; border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+  th, td { padding: .55rem .7rem; text-align: left; white-space: nowrap;
+            border-bottom: 1px solid #1c2029; }
+  th { position: sticky; top: 0; background: #161a22; cursor: pointer;
+        user-select: none; font-weight: 600; }
+  th:hover { background: #1d2230; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:hover td { background: #141821; }
+  .sym a { color: #6ea8fe; text-decoration: none; font-weight: 600; }
+  .sym a:hover { text-decoration: underline; }
+  .rvol { font-weight: 700; color: #ffd479; }
+  .up { color: #4ade80; }
+  .down { color: #f87171; }
+  .flat { color: #9aa4b2; }
+  details.legend { margin: 0 0 1rem; border: 1px solid #232733; border-radius: 10px;
+                    background: #12151c; padding: .4rem .9rem; }
+  details.legend summary { cursor: pointer; color: #cfd6e0; font-weight: 600;
+                            font-size: .9rem; padding: .35rem 0; }
+  details.legend ul { margin: .4rem 0 .6rem; padding-left: 1.1rem;
+                       color: #9aa4b2; font-size: .82rem; line-height: 1.6; }
+  details.legend b { color: #cfd6e0; }
+  .earn { color: #b6c0cf; font-size: .8rem; white-space: normal; min-width: 22rem; }
+  .earn.record { color: #ffd479; font-weight: 600; }
+  .earn.near { color: #7dd3fc; }
+  .empty { text-align: center; color: #9aa4b2; padding: 2rem; }
+  footer { margin-top: 1rem; color: #6b7280; font-size: .78rem; }
+  a.ext { color: #6ea8fe; }
+</style>
+</head>
+<body>
+  <h1>📈 Unusual Volume Scanner</h1>
+  <nav class="tabs"><a class="active" href="index.html">📈 Daily (EOD)</a><a class="" href="intraday.html">⚡ Intraday</a></nav>
+  <div class="meta">
+    Market <b>US</b> &middot;
+    min RVOL <b>3×</b> &middot;
+    <b>65</b> stock(s) flagged &middot;
+    generated <b>2026-06-07 20:32 UTC</b>
+    &middot; click a symbol to open its Yahoo Finance chart &middot; click a column to sort
+    <br>Volume is end-of-day; figures tagged "consolidated" match Yahoo / brokers.
+  </div>
+  <details class="legend" open>
+    <summary>What the columns mean</summary>
+    <ul>
+<li><b>Symbol</b> — Ticker (click to open its Yahoo Finance chart).</li>
+<li><b>Date</b> — Trading day.</li>
+<li><b>RVOL</b> — Relative volume = day volume / 20-day average (3× = 3× normal).</li>
+<li><b>Avg vol</b> — 20-day average daily volume — the RVOL baseline.</li>
+<li><b>Day vol</b> — That day&#x27;s total volume.</li>
+<li><b>Prev-day vol</b> — Previous day&#x27;s total volume.</li>
+<li><b>Avg vol 10d</b> — Trailing 10-day average volume.</li>
+<li><b>Open / Close</b> — Day&#x27;s opening and closing price.</li>
+<li><b>% chg</b> — Close vs. the previous day&#x27;s close.</li>
+<li><b>Range</b> — Day&#x27;s high-low swing as % of price — intraday volatility.</li>
+<li><b>Vol vs avg</b> — That swing vs. the stock&#x27;s average daily range (2× = twice as volatile as usual).</li>
+<li><b>Earnings</b> — Latest quarterly earnings summary; 🔥 = record-quarter revenue, ⚡ = spike right after earnings.</li>
+    </ul>
+  </details>
+  <div class="wrap">
+  <table id="t">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Date</th>
+        <th class="num">RVOL</th>
+        <th class="num">Avg vol</th>
+        <th class="num">Day vol</th>
+        <th class="num">Prev-day vol</th>
+        <th class="num">Avg vol 10d</th>
+        <th class="num">Open</th>
+        <th class="num">Close</th>
+        <th class="num">% chg</th>
+        <th class="num">Range</th>
+        <th class="num">Vol vs avg</th>
+        <th>Earnings</th>
+      </tr>
+    </thead>
+    <tbody>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/VVOS" target="_blank" rel="noopener">VVOS ↗</a></td><td>2026-06-05</td><td class="num rvol">479.26×</td><td class="num">141,870</td><td class="num">67,992,100</td><td class="num">40,500</td><td class="num">131,100</td><td class="num">0.72</td><td class="num">0.86</td><td class="num up">+24.82%</td><td class="num">76.1%</td><td class="num">10.7×</td><td class="earn">+70% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/BCDA" target="_blank" rel="noopener">BCDA ↗</a></td><td>2026-06-05</td><td class="num rvol">395.55×</td><td class="num">380,860</td><td class="num">150,649,200</td><td class="num">43,000</td><td class="num">92,320</td><td class="num">1.20</td><td class="num">1.03</td><td class="num up">+11.96%</td><td class="num">75.7%</td><td class="num">11.4×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/NOTV" target="_blank" rel="noopener">NOTV ↗</a></td><td>2026-06-05</td><td class="num rvol">385.59×</td><td class="num">2,748,840</td><td class="num">1,059,934,600</td><td class="num">15,198,300</td><td class="num">4,472,570</td><td class="num">0.09</td><td class="num">0.17</td><td class="num up">+88.89%</td><td class="num">129.4%</td><td class="num">7.1×</td><td class="earn">-5% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/NUWE" target="_blank" rel="noopener">NUWE ↗</a></td><td>2026-06-05</td><td class="num rvol">250.13×</td><td class="num">194,515</td><td class="num">48,653,700</td><td class="num">614,200</td><td class="num">338,550</td><td class="num">0.17</td><td class="num">0.17</td><td class="num down">-60.47%</td><td class="num">35.3%</td><td class="num">0.6×</td><td class="earn">+26% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/SCAG" target="_blank" rel="noopener">SCAG ↗</a></td><td>2026-06-05</td><td class="num rvol">216.87×</td><td class="num">419,210</td><td class="num">90,914,300</td><td class="num">7,322,300</td><td class="num">829,540</td><td class="num">0.27</td><td class="num">0.84</td><td class="num up">+194.76%</td><td class="num">94.9%</td><td class="num">12.2×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/AGRZ" target="_blank" rel="noopener">AGRZ ↗</a></td><td>2026-06-05</td><td class="num rvol">132.88×</td><td class="num">156,600</td><td class="num">20,809,500</td><td class="num">58,500</td><td class="num">179,480</td><td class="num">0.26</td><td class="num">0.28</td><td class="num down">-7.67%</td><td class="num">22.7%</td><td class="num">1.9×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/HXHX" target="_blank" rel="noopener">HXHX ↗</a></td><td>2026-06-05</td><td class="num rvol">108.42×</td><td class="num">119,675</td><td class="num">12,975,700</td><td class="num">305,600</td><td class="num">171,990</td><td class="num">0.44</td><td class="num">0.45</td><td class="num up">+4.42%</td><td class="num">61.5%</td><td class="num">5.0×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/SMTK" target="_blank" rel="noopener">SMTK ↗</a></td><td>2026-06-05</td><td class="num rvol">96.96×</td><td class="num">2,366,885</td><td class="num">229,496,600</td><td class="num">34,635,100</td><td class="num">3,917,370</td><td class="num">0.59</td><td class="num">0.41</td><td class="num up">+27.81%</td><td class="num">48.2%</td><td class="num">4.0×</td><td class="earn">-13% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/SNBR" target="_blank" rel="noopener">SNBR ↗</a></td><td>2026-06-05</td><td class="num rvol">93.21×</td><td class="num">3,255,410</td><td class="num">303,435,800</td><td class="num">25,466,900</td><td class="num">5,324,200</td><td class="num">0.34</td><td class="num">0.48</td><td class="num up">+37.14%</td><td class="num">116.7%</td><td class="num">2.1×</td><td class="earn">-19% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/BGMS" target="_blank" rel="noopener">BGMS ↗</a></td><td>2026-06-05</td><td class="num rvol">80.52×</td><td class="num">1,298,670</td><td class="num">104,571,900</td><td class="num">25,410,900</td><td class="num">2,569,030</td><td class="num">2.73</td><td class="num">1.50</td><td class="num up">+41.51%</td><td class="num">90.7%</td><td class="num">18.9×</td><td class="earn record">🔥 record revenue (5q high)</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/RMSG" target="_blank" rel="noopener">RMSG ↗</a></td><td>2026-06-05</td><td class="num rvol">56.79×</td><td class="num">3,503,025</td><td class="num">198,947,200</td><td class="num">32,919,700</td><td class="num">3,449,380</td><td class="num">3.27</td><td class="num">1.83</td><td class="num up">+66.36%</td><td class="num">119.7%</td><td class="num">11.9×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/BESS" target="_blank" rel="noopener">BESS ↗</a></td><td>2026-06-05</td><td class="num rvol">54.39×</td><td class="num">323,705</td><td class="num">17,606,500</td><td class="num">104,700</td><td class="num">354,320</td><td class="num">4.56</td><td class="num">3.52</td><td class="num up">+15.41%</td><td class="num">52.0%</td><td class="num">3.3×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/LHSW" target="_blank" rel="noopener">LHSW ↗</a></td><td>2026-06-05</td><td class="num rvol">46.47×</td><td class="num">647,300</td><td class="num">30,081,000</td><td class="num">434,100</td><td class="num">844,260</td><td class="num">0.12</td><td class="num">0.14</td><td class="num down">-21.11%</td><td class="num">19.0%</td><td class="num">1.1×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/DAIC" target="_blank" rel="noopener">DAIC ↗</a></td><td>2026-06-05</td><td class="num rvol">33.76×</td><td class="num">256,923</td><td class="num">8,673,900</td><td class="num">238,800</td><td class="num">433,074</td><td class="num">2.74</td><td class="num">2.42</td><td class="num down">-20.39%</td><td class="num">44.2%</td><td class="num">1.8×</td><td class="earn">-97% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/BNAI" target="_blank" rel="noopener">BNAI ↗</a></td><td>2026-06-05</td><td class="num rvol">30.76×</td><td class="num">302,415</td><td class="num">9,301,900</td><td class="num">521,200</td><td class="num">291,280</td><td class="num">16.31</td><td class="num">22.17</td><td class="num up">+35.68%</td><td class="num">69.4%</td><td class="num">6.7×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/SUGP" target="_blank" rel="noopener">SUGP ↗</a></td><td>2026-06-05</td><td class="num rvol">24.00×</td><td class="num">1,677,020</td><td class="num">40,245,900</td><td class="num">16,946,400</td><td class="num">3,102,040</td><td class="num">0.70</td><td class="num">1.00</td><td class="num up">+39.11%</td><td class="num">77.2%</td><td class="num">1.2×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/BBCP" target="_blank" rel="noopener">BBCP ↗</a></td><td>2026-06-05</td><td class="num rvol">22.16×</td><td class="num">199,260</td><td class="num">4,414,800</td><td class="num">1,502,100</td><td class="num">253,020</td><td class="num">11.31</td><td class="num">10.43</td><td class="num up">+30.70%</td><td class="num">21.9%</td><td class="num">7.2×</td><td class="earn">+14% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/LGPS" target="_blank" rel="noopener">LGPS ↗</a></td><td>2026-06-05</td><td class="num rvol">19.85×</td><td class="num">310,770</td><td class="num">6,169,700</td><td class="num">4,469,400</td><td class="num">595,310</td><td class="num">0.64</td><td class="num">0.72</td><td class="num up">+13.86%</td><td class="num">53.9%</td><td class="num">5.4×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/CALC" target="_blank" rel="noopener">CALC ↗</a></td><td>2026-06-05</td><td class="num rvol">18.42×</td><td class="num">160,450</td><td class="num">2,954,900</td><td class="num">160,500</td><td class="num">180,270</td><td class="num">0.88</td><td class="num">1.06</td><td class="num up">+24.56%</td><td class="num">28.3%</td><td class="num">3.8×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/CMND" target="_blank" rel="noopener">CMND ↗</a></td><td>2026-06-05</td><td class="num rvol">15.16×</td><td class="num">2,756,102</td><td class="num">41,784,900</td><td class="num">126,200</td><td class="num">4,731,700</td><td class="num">3.71</td><td class="num">3.98</td><td class="num up">+36.77%</td><td class="num">32.4%</td><td class="num">2.4×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/MRLN" target="_blank" rel="noopener">MRLN ↗</a></td><td>2026-06-05</td><td class="num rvol">14.02×</td><td class="num">2,026,120</td><td class="num">28,399,600</td><td class="num">5,312,400</td><td class="num">2,535,480</td><td class="num">9.19</td><td class="num">8.60</td><td class="num up">+19.78%</td><td class="num">22.6%</td><td class="num">2.1×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/EGG" target="_blank" rel="noopener">EGG ↗</a></td><td>2026-06-05</td><td class="num rvol">12.70×</td><td class="num">59,780</td><td class="num">759,100</td><td class="num">535,000</td><td class="num">93,050</td><td class="num">10.20</td><td class="num">5.60</td><td class="num down">-48.39%</td><td class="num">108.9%</td><td class="num">3.7×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/APM" target="_blank" rel="noopener">APM ↗</a></td><td>2026-06-05</td><td class="num rvol">11.14×</td><td class="num">104,025</td><td class="num">1,159,100</td><td class="num">554,200</td><td class="num">186,500</td><td class="num">1.08</td><td class="num">1.01</td><td class="num down">-7.34%</td><td class="num">48.0%</td><td class="num">5.5×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/ZUMZ" target="_blank" rel="noopener">ZUMZ ↗</a></td><td>2026-06-05</td><td class="num rvol">10.24×</td><td class="num">126,490</td><td class="num">1,294,700</td><td class="num">234,800</td><td class="num">147,520</td><td class="num">15.09</td><td class="num">17.39</td><td class="num down">-25.94%</td><td class="num">28.2%</td><td class="num">5.6×</td><td class="earn">+5% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/OPTT" target="_blank" rel="noopener">OPTT ↗</a></td><td>2026-06-05</td><td class="num rvol">8.78×</td><td class="num">3,579,185</td><td class="num">31,421,400</td><td class="num">2,226,300</td><td class="num">4,301,710</td><td class="num">0.32</td><td class="num">0.29</td><td class="num down">-25.64%</td><td class="num">10.3%</td><td class="num">1.5×</td><td class="earn">-38% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/RDCM" target="_blank" rel="noopener">RDCM ↗</a></td><td>2026-06-05</td><td class="num rvol">8.22×</td><td class="num">209,490</td><td class="num">1,721,000</td><td class="num">147,200</td><td class="num">175,190</td><td class="num">14.50</td><td class="num">12.32</td><td class="num down">-14.80%</td><td class="num">29.6%</td><td class="num">5.4×</td><td class="earn">+12% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/LRHC" target="_blank" rel="noopener">LRHC ↗</a></td><td>2026-06-05</td><td class="num rvol">7.71×</td><td class="num">321,935</td><td class="num">2,482,000</td><td class="num">202,600</td><td class="num">377,410</td><td class="num">1.12</td><td class="num">1.05</td><td class="num down">-4.55%</td><td class="num">9.5%</td><td class="num">0.7×</td><td class="earn">+3% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/STI" target="_blank" rel="noopener">STI ↗</a></td><td>2026-06-05</td><td class="num rvol">7.15×</td><td class="num">5,331,345</td><td class="num">38,130,100</td><td class="num">105,652,800</td><td class="num">10,610,360</td><td class="num">42.73</td><td class="num">35.72</td><td class="num up">+57.29%</td><td class="num">50.4%</td><td class="num">13.4×</td><td class="earn record">🔥 record revenue (5q high)</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/ZURA" target="_blank" rel="noopener">ZURA ↗</a></td><td>2026-06-05</td><td class="num rvol">6.80×</td><td class="num">728,975</td><td class="num">4,956,200</td><td class="num">1,544,800</td><td class="num">705,200</td><td class="num">3.67</td><td class="num">3.40</td><td class="num down">-7.36%</td><td class="num">14.3%</td><td class="num">1.6×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/INN" target="_blank" rel="noopener">INN ↗</a></td><td>2026-06-05</td><td class="num rvol">6.65×</td><td class="num">976,000</td><td class="num">6,487,100</td><td class="num">1,514,500</td><td class="num">1,292,840</td><td class="num">5.91</td><td class="num">5.74</td><td class="num down">-3.53%</td><td class="num">4.4%</td><td class="num">1.5×</td><td class="earn">+0% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/CYPH" target="_blank" rel="noopener">CYPH ↗</a></td><td>2026-06-05</td><td class="num rvol">6.45×</td><td class="num">4,635,390</td><td class="num">29,894,600</td><td class="num">5,730,500</td><td class="num">5,053,730</td><td class="num">0.54</td><td class="num">0.52</td><td class="num down">-47.09%</td><td class="num">38.7%</td><td class="num">1.4×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/IHD" target="_blank" rel="noopener">IHD ↗</a></td><td>2026-06-05</td><td class="num rvol">6.06×</td><td class="num">97,955</td><td class="num">593,500</td><td class="num">124,000</td><td class="num">102,220</td><td class="num">7.94</td><td class="num">7.83</td><td class="num down">-1.51%</td><td class="num">2.4%</td><td class="num">1.4×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/ACCL" target="_blank" rel="noopener">ACCL ↗</a></td><td>2026-06-05</td><td class="num rvol">5.99×</td><td class="num">912,600</td><td class="num">5,463,000</td><td class="num">15,559,000</td><td class="num">1,811,850</td><td class="num">1.61</td><td class="num">1.55</td><td class="num up">+18.32%</td><td class="num">41.6%</td><td class="num">7.0×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/BQ" target="_blank" rel="noopener">BQ ↗</a></td><td>2026-06-05</td><td class="num rvol">5.31×</td><td class="num">278,040</td><td class="num">1,475,700</td><td class="num">35,800</td><td class="num">88,550</td><td class="num">0.81</td><td class="num">0.72</td><td class="num up">+0.42%</td><td class="num">35.4%</td><td class="num">3.3×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/STRF" target="_blank" rel="noopener">STRF ↗</a></td><td>2026-06-05</td><td class="num rvol">5.26×</td><td class="num">97,120</td><td class="num">510,800</td><td class="num">148,700</td><td class="num">131,050</td><td class="num">95.00</td><td class="num">92.63</td><td class="num down">-2.79%</td><td class="num">4.3%</td><td class="num">3.6×</td><td class="earn">+12% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/MCN" target="_blank" rel="noopener">MCN ↗</a></td><td>2026-06-05</td><td class="num rvol">5.22×</td><td class="num">62,775</td><td class="num">327,800</td><td class="num">78,600</td><td class="num">62,910</td><td class="num">5.83</td><td class="num">5.80</td><td class="num down">-0.51%</td><td class="num">1.0%</td><td class="num">0.9×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/HKIT" target="_blank" rel="noopener">HKIT ↗</a></td><td>2026-06-05</td><td class="num rvol">5.08×</td><td class="num">8,273,020</td><td class="num">41,991,300</td><td class="num">27,448,300</td><td class="num">15,845,210</td><td class="num">0.38</td><td class="num">0.28</td><td class="num down">-14.85%</td><td class="num">55.2%</td><td class="num">0.3×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/VLN" target="_blank" rel="noopener">VLN ↗</a></td><td>2026-06-05</td><td class="num rvol">5.00×</td><td class="num">3,461,980</td><td class="num">17,327,100</td><td class="num">1,516,300</td><td class="num">2,612,860</td><td class="num">3.10</td><td class="num">2.11</td><td class="num down">-34.67%</td><td class="num">67.8%</td><td class="num">4.1×</td><td class="earn">+0% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/RBB" target="_blank" rel="noopener">RBB ↗</a></td><td>2026-06-05</td><td class="num rvol">4.97×</td><td class="num">75,665</td><td class="num">376,200</td><td class="num">154,000</td><td class="num">93,590</td><td class="num">23.98</td><td class="num">24.00</td><td class="num up">+0.08%</td><td class="num">2.3%</td><td class="num">1.1×</td><td class="earn">+22% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/MYO" target="_blank" rel="noopener">MYO ↗</a></td><td>2026-06-05</td><td class="num rvol">4.92×</td><td class="num">657,825</td><td class="num">3,235,200</td><td class="num">1,147,300</td><td class="num">826,490</td><td class="num">1.25</td><td class="num">1.28</td><td class="num down">-0.78%</td><td class="num">20.3%</td><td class="num">2.7×</td><td class="earn">+3% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/ADCT" target="_blank" rel="noopener">ADCT ↗</a></td><td>2026-06-05</td><td class="num rvol">4.90×</td><td class="num">1,556,910</td><td class="num">7,627,200</td><td class="num">12,639,800</td><td class="num">1,975,600</td><td class="num">1.36</td><td class="num">1.03</td><td class="num down">-21.97%</td><td class="num">35.4%</td><td class="num">2.1×</td><td class="earn">-9% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/CURV" target="_blank" rel="noopener">CURV ↗</a></td><td>2026-06-05</td><td class="num rvol">4.86×</td><td class="num">584,635</td><td class="num">2,844,100</td><td class="num">5,184,200</td><td class="num">905,720</td><td class="num">1.20</td><td class="num">1.64</td><td class="num up">+17.99%</td><td class="num">32.3%</td><td class="num">4.3×</td><td class="earn">-14% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/LULU" target="_blank" rel="noopener">LULU ↗</a></td><td>2026-06-05</td><td class="num rvol">4.61×</td><td class="num">3,510,620</td><td class="num">16,178,400</td><td class="num">9,835,900</td><td class="num">3,908,970</td><td class="num">110.43</td><td class="num">114.23</td><td class="num down">-8.56%</td><td class="num">6.5%</td><td class="num">1.9×</td><td class="earn">+4% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/GLDG" target="_blank" rel="noopener">GLDG ↗</a></td><td>2026-06-05</td><td class="num rvol">4.40×</td><td class="num">2,158,990</td><td class="num">9,493,900</td><td class="num">2,335,500</td><td class="num">2,014,410</td><td class="num">1.10</td><td class="num">0.95</td><td class="num down">-13.64%</td><td class="num">16.8%</td><td class="num">2.6×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/ALM" target="_blank" rel="noopener">ALM ↗</a></td><td>2026-06-05</td><td class="num rvol">4.37×</td><td class="num">4,266,070</td><td class="num">18,628,600</td><td class="num">3,133,300</td><td class="num">3,736,670</td><td class="num">17.77</td><td class="num">16.31</td><td class="num down">-21.13%</td><td class="num">10.5%</td><td class="num">1.1×</td><td class="earn record">🔥 record revenue (5q high); +221% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/DLXY" target="_blank" rel="noopener">DLXY ↗</a></td><td>2026-06-05</td><td class="num rvol">4.32×</td><td class="num">583,075</td><td class="num">2,521,700</td><td class="num">264,000</td><td class="num">1,032,350</td><td class="num">0.41</td><td class="num">0.49</td><td class="num up">+11.49%</td><td class="num">23.8%</td><td class="num">2.0×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/AIB" target="_blank" rel="noopener">AIB ↗</a></td><td>2026-06-05</td><td class="num rvol">4.31×</td><td class="num">1,103,450</td><td class="num">4,755,400</td><td class="num">4,130,500</td><td class="num">1,593,970</td><td class="num">1.71</td><td class="num">1.65</td><td class="num down">-19.51%</td><td class="num">9.1%</td><td class="num">0.3×</td><td class="earn">+9% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/SMJF" target="_blank" rel="noopener">SMJF ↗</a></td><td>2026-06-05</td><td class="num rvol">4.13×</td><td class="num">623,260</td><td class="num">2,572,600</td><td class="num">922,600</td><td class="num">618,660</td><td class="num">5.14</td><td class="num">5.30</td><td class="num up">+1.53%</td><td class="num">7.5%</td><td class="num">1.3×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/EH" target="_blank" rel="noopener">EH ↗</a></td><td>2026-06-05</td><td class="num rvol">3.97×</td><td class="num">792,740</td><td class="num">3,147,500</td><td class="num">1,987,800</td><td class="num">1,005,330</td><td class="num">9.07</td><td class="num">7.89</td><td class="num down">-14.46%</td><td class="num">17.1%</td><td class="num">2.9×</td><td class="earn">-7% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/SMBK" target="_blank" rel="noopener">SMBK ↗</a></td><td>2026-06-05</td><td class="num rvol">3.85×</td><td class="num">59,925</td><td class="num">230,800</td><td class="num">72,200</td><td class="num">56,030</td><td class="num">42.04</td><td class="num">42.27</td><td class="num up">+1.56%</td><td class="num">2.8%</td><td class="num">1.1×</td><td class="earn record">🔥 record revenue (5q high); +15% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/BMGL" target="_blank" rel="noopener">BMGL ↗</a></td><td>2026-06-05</td><td class="num rvol">3.80×</td><td class="num">1,421,195</td><td class="num">5,405,600</td><td class="num">1,111,800</td><td class="num">2,820,070</td><td class="num">0.42</td><td class="num">0.55</td><td class="num up">+12.37%</td><td class="num">47.2%</td><td class="num">3.5×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/GIII" target="_blank" rel="noopener">GIII ↗</a></td><td>2026-06-05</td><td class="num rvol">3.76×</td><td class="num">461,045</td><td class="num">1,732,800</td><td class="num">701,900</td><td class="num">458,520</td><td class="num">35.84</td><td class="num">33.71</td><td class="num up">+5.21%</td><td class="num">9.1%</td><td class="num">2.9×</td><td class="earn">-8% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/GNL" target="_blank" rel="noopener">GNL ↗</a></td><td>2026-06-05</td><td class="num rvol">3.75×</td><td class="num">1,923,775</td><td class="num">7,220,300</td><td class="num">1,568,600</td><td class="num">1,829,490</td><td class="num">9.40</td><td class="num">9.39</td><td class="num flat">+0.00%</td><td class="num">1.9%</td><td class="num">1.1×</td><td class="earn">-17% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/AGX" target="_blank" rel="noopener">AGX ↗</a></td><td>2026-06-05</td><td class="num rvol">3.74×</td><td class="num">288,195</td><td class="num">1,077,900</td><td class="num">379,400</td><td class="num">276,230</td><td class="num">697.68</td><td class="num">694.72</td><td class="num up">+0.77%</td><td class="num">17.1%</td><td class="num">3.3×</td><td class="earn record">🔥 record revenue (5q high); +50% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/LIQT" target="_blank" rel="noopener">LIQT ↗</a></td><td>2026-06-05</td><td class="num rvol">3.72×</td><td class="num">420,505</td><td class="num">1,565,800</td><td class="num">194,500</td><td class="num">825,030</td><td class="num">0.98</td><td class="num">0.88</td><td class="num down">-27.27%</td><td class="num">26.1%</td><td class="num">1.2×</td><td class="earn">-10% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/GNT" target="_blank" rel="noopener">GNT ↗</a></td><td>2026-06-05</td><td class="num rvol">3.66×</td><td class="num">78,790</td><td class="num">288,000</td><td class="num">718,700</td><td class="num">111,900</td><td class="num">8.61</td><td class="num">8.57</td><td class="num down">-0.23%</td><td class="num">2.0%</td><td class="num">0.9×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/WLTH" target="_blank" rel="noopener">WLTH ↗</a></td><td>2026-06-05</td><td class="num rvol">3.61×</td><td class="num">1,002,340</td><td class="num">3,616,100</td><td class="num">1,784,200</td><td class="num">1,078,870</td><td class="num">9.93</td><td class="num">9.85</td><td class="num down">-14.35%</td><td class="num">10.3%</td><td class="num">2.2×</td><td class="earn record">🔥 record revenue (5q high); +20% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/AVD" target="_blank" rel="noopener">AVD ↗</a></td><td>2026-06-05</td><td class="num rvol">3.54×</td><td class="num">273,950</td><td class="num">970,600</td><td class="num">298,200</td><td class="num">301,100</td><td class="num">2.59</td><td class="num">2.66</td><td class="num up">+5.98%</td><td class="num">13.9%</td><td class="num">2.0×</td><td class="earn">+7% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/PL" target="_blank" rel="noopener">PL ↗</a></td><td>2026-06-05</td><td class="num rvol">3.43×</td><td class="num">11,856,120</td><td class="num">40,648,400</td><td class="num">18,990,700</td><td class="num">13,853,850</td><td class="num">38.30</td><td class="num">32.22</td><td class="num down">-25.98%</td><td class="num">23.3%</td><td class="num">1.8×</td><td class="earn record">🔥 record revenue (5q high); +42% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/WMS" target="_blank" rel="noopener">WMS ↗</a></td><td>2026-06-05</td><td class="num rvol">3.31×</td><td class="num">882,675</td><td class="num">2,919,300</td><td class="num">930,300</td><td class="num">1,045,650</td><td class="num">129.76</td><td class="num">130.15</td><td class="num down">-0.80%</td><td class="num">1.8%</td><td class="num">0.5×</td><td class="earn">+10% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/VFF" target="_blank" rel="noopener">VFF ↗</a></td><td>2026-06-05</td><td class="num rvol">3.30×</td><td class="num">1,121,370</td><td class="num">3,703,800</td><td class="num">947,400</td><td class="num">653,700</td><td class="num">2.29</td><td class="num">2.09</td><td class="num down">-15.38%</td><td class="num">15.8%</td><td class="num">3.0×</td><td class="earn">+27% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/JBIO" target="_blank" rel="noopener">JBIO ↗</a></td><td>2026-06-05</td><td class="num rvol">3.27×</td><td class="num">795,015</td><td class="num">2,600,900</td><td class="num">3,509,100</td><td class="num">1,113,670</td><td class="num">17.52</td><td class="num">16.94</td><td class="num down">-4.51%</td><td class="num">10.2%</td><td class="num">0.9×</td><td class="earn"></td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/COO" target="_blank" rel="noopener">COO ↗</a></td><td>2026-06-05</td><td class="num rvol">3.27×</td><td class="num">2,781,650</td><td class="num">9,087,400</td><td class="num">4,059,700</td><td class="num">3,221,750</td><td class="num">65.24</td><td class="num">67.34</td><td class="num up">+8.58%</td><td class="num">3.9%</td><td class="num">1.8×</td><td class="earn">+6% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/TTAN" target="_blank" rel="noopener">TTAN ↗</a></td><td>2026-06-05</td><td class="num rvol">3.19×</td><td class="num">1,471,105</td><td class="num">4,695,900</td><td class="num">3,039,000</td><td class="num">1,662,000</td><td class="num">83.05</td><td class="num">77.40</td><td class="num up">+4.13%</td><td class="num">11.0%</td><td class="num">2.3×</td><td class="earn record">🔥 record revenue (5q high); +21% YoY rev</td></tr>
+<tr><td class="sym"><a href="https://finance.yahoo.com/quote/CMCO" target="_blank" rel="noopener">CMCO ↗</a></td><td>2026-06-05</td><td class="num rvol">3.17×</td><td class="num">399,535</td><td class="num">1,266,100</td><td class="num">1,679,300</td><td class="num">495,340</td><td class="num">13.85</td><td class="num">12.88</td><td class="num down">-8.52%</td><td class="num">11.4%</td><td class="num">2.2×</td><td class="earn">+10% YoY rev</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <footer>
+    Educational tool, not financial advice. Volume is end-of-day; figures tagged "consolidated" match Yahoo / brokers. Built with the
+    <span class="ext">volume_scanner</span> project.
+  </footer>
+<script>
+(function () {
+  const table = document.getElementById('t');
+  if (!table) return;
+  const tbody = table.tBodies[0];
+  table.querySelectorAll('th').forEach((th, idx) => {
+    let asc = true;
+    th.addEventListener('click', () => {
+      const rows = Array.from(tbody.rows).filter(r => !r.querySelector('.empty'));
+      rows.sort((a, b) => {
+        const x = a.cells[idx].innerText.replace(/[^0-9.\-]/g, '');
+        const y = b.cells[idx].innerText.replace(/[^0-9.\-]/g, '');
+        const nx = parseFloat(x), ny = parseFloat(y);
+        let cmp;
+        if (!isNaN(nx) && !isNaN(ny)) cmp = nx - ny;
+        else cmp = a.cells[idx].innerText.localeCompare(b.cells[idx].innerText);
+        return asc ? cmp : -cmp;
+      });
+      asc = !asc;
+      rows.forEach(r => tbody.appendChild(r));
+    });
+  });
+})();
+</script>
+</body>
+</html>
