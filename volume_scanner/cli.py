@@ -120,6 +120,9 @@ def main(argv=None) -> int:
     p.add_argument("--min-rvol", type=float, default=2.0, help="Minimum relative volume.")
     p.add_argument("--min-dollar-vol", type=float, default=1_000_000.0,
                    help="Minimum last-day dollar volume.")
+    p.add_argument("--min-avg-vol", type=float, default=50_000.0,
+                   help="Minimum average baseline volume. Lower it (e.g. 0) for "
+                        "intraday/IEX scans where cumulative volume is partial.")
     p.add_argument("--chunk-size", type=int, default=100, help="Tickers per batch.")
     p.add_argument("--pause", type=float, default=1.0,
                    help="Seconds to wait between batches (raise if rate-limited).")
@@ -180,6 +183,7 @@ def main(argv=None) -> int:
         period=args.period,
         chunk_size=args.chunk_size,
         min_dollar_vol=args.min_dollar_vol,
+        min_avg_vol=args.min_avg_vol,
         min_rvol=args.min_rvol,
         intraday_interval=args.intraday_interval,
         intraday_period=args.intraday_period,
@@ -247,7 +251,8 @@ def main(argv=None) -> int:
         d = os.path.dirname(args.html)
         if d:
             os.makedirs(d, exist_ok=True)
-        report_html.write(df, args.html, market=src, min_rvol=args.min_rvol)
+        report_html.write(df, args.html, market=src, min_rvol=args.min_rvol,
+                          mode="intraday" if args.intraday else "eod")
         print(f"Saved HTML report -> {args.html}")
 
     return 0

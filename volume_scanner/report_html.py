@@ -33,11 +33,34 @@ def _fmt_num(v, dp: int = 2) -> str:
 
 
 def render(df, *, market: str = "us", min_rvol: float = 3.0,
-           generated_at: datetime | None = None) -> str:
-    """Return a full HTML document string for the given results DataFrame."""
+           generated_at: datetime | None = None, mode: str = "eod") -> str:
+    """Return a full HTML document string for the given results DataFrame.
+
+    mode: "eod" (end-of-day) or "intraday" (refreshed through the session).
+    The two pages live side by side (index.html / intraday.html) and cross-link.
+    """
     generated_at = generated_at or datetime.now(timezone.utc)
     stamp = generated_at.strftime("%Y-%m-%d %H:%M UTC")
     n = 0 if df is None else len(df)
+
+    intraday = mode == "intraday"
+    page_title = "Intraday Volume Scanner" if intraday else "Unusual Volume Scanner"
+    page_emoji = "⚡" if intraday else "\U0001F4C8"
+    if intraday:
+        blurb = ("Live during the US session: today's cumulative volume vs. the "
+                 "average for the same time-of-day. Volume is Alpaca's free IEX "
+                 "feed (a fraction of total), so the RVOL ratio is the signal, "
+                 "not the absolute share count.")
+    else:
+        blurb = ('Volume is end-of-day; figures tagged "consolidated" match '
+                 "Yahoo / brokers.")
+    # Cross-link nav (active tab highlighted).
+    nav_html = (
+        '<nav class="tabs">'
+        f'<a class="{"active" if not intraday else ""}" href="index.html">\U0001F4C8 Daily (EOD)</a>'
+        f'<a class="{"active" if intraday else ""}" href="intraday.html">⚡ Intraday</a>'
+        "</nav>"
+    )
 
     has_earn = df is not None and "earnings_note" in df.columns
     n_cols = 12 + (1 if has_earn else 0)  # symbol..vol-vs-avg (+earnings)
@@ -96,19 +119,35 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
     earn_header = "<th>Earnings</th>" if has_earn else ""
 
     # Legend: a short explanation of every column, shown above the table.
-    legend_items = [
-        ("Symbol", "Ticker (click to open its Yahoo Finance chart)."),
-        ("Date", "Trading day (intraday mode adds the time-of-day)."),
-        ("RVOL", "Relative volume = day volume / 20-day average (3× = 3× normal)."),
-        ("Avg vol", "20-day average daily volume — the RVOL baseline."),
-        ("Day vol", "That day's total volume."),
-        ("Prev-day vol", "Previous day's total volume."),
-        ("Avg vol 10d", "Trailing 10-day average volume."),
-        ("Open / Close", "Day's opening and closing price."),
-        ("% chg", "Close vs. the previous day's close."),
-        ("Range", "Day's high-low swing as % of price — intraday volatility."),
-        ("Vol vs avg", "That swing vs. the stock's average daily range (2× = twice as volatile as usual)."),
-    ]
+    if intraday:
+        legend_items = [
+            ("Symbol", "Ticker (click to open its Yahoo Finance chart)."),
+            ("Date", "Trading day and time-of-day the snapshot was taken."),
+            ("RVOL", "Today's cumulative volume so far / the average cumulative "
+                     "volume by this same time-of-day (3× = 3× the usual pace)."),
+            ("Avg vol", "Average cumulative volume by this time-of-day — the RVOL baseline."),
+            ("Day vol", "Today's cumulative volume so far."),
+            ("Prev-day vol", "Previous session's cumulative volume by this time-of-day."),
+            ("Avg vol 10d", "Last 10 sessions' average volume by this time-of-day."),
+            ("Open / Close", "Today's open and latest price."),
+            ("% chg", "Latest price vs. the previous day's close."),
+            ("Range", "Today's high-low swing so far as % of price — intraday volatility."),
+            ("Vol vs avg", "That swing vs. the stock's average full-day range (2× = twice as volatile as usual)."),
+        ]
+    else:
+        legend_items = [
+            ("Symbol", "Ticker (click to open its Yahoo Finance chart)."),
+            ("Date", "Trading day."),
+            ("RVOL", "Relative volume = day volume / 20-day average (3× = 3× normal)."),
+            ("Avg vol", "20-day average daily volume — the RVOL baseline."),
+            ("Day vol", "That day's total volume."),
+            ("Prev-day vol", "Previous day's total volume."),
+            ("Avg vol 10d", "Trailing 10-day average volume."),
+            ("Open / Close", "Day's opening and closing price."),
+            ("% chg", "Close vs. the previous day's close."),
+            ("Range", "Day's high-low swing as % of price — intraday volatility."),
+            ("Vol vs avg", "That swing vs. the stock's average daily range (2× = twice as volatile as usual)."),
+        ]
     if has_earn:
         legend_items.append(
             ("Earnings", "Latest quarterly earnings summary; \U0001F525 = record-quarter revenue, ⚡ = spike right after earnings."))
@@ -121,13 +160,19 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Unusual Volume Scanner</title>
+<title>{html.escape(page_title)}</title>
 <style>
   :root {{ color-scheme: light dark; }}
   * {{ box-sizing: border-box; }}
   body {{ font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
          margin: 0; padding: 1.5rem; background: #0f1115; color: #e6e6e6; }}
   h1 {{ margin: 0 0 .25rem; font-size: 1.4rem; }}
+  nav.tabs {{ display: flex; gap: .5rem; margin: .25rem 0 .9rem; }}
+  nav.tabs a {{ padding: .35rem .8rem; border-radius: 999px; text-decoration: none;
+                font-size: .85rem; font-weight: 600; color: #9aa4b2;
+                border: 1px solid #232733; background: #12151c; }}
+  nav.tabs a:hover {{ color: #cfd6e0; border-color: #2c3140; }}
+  nav.tabs a.active {{ color: #0f1115; background: #6ea8fe; border-color: #6ea8fe; }}
   .meta {{ color: #9aa4b2; font-size: .85rem; margin-bottom: 1rem; }}
   .meta b {{ color: #cfd6e0; }}
   .wrap {{ overflow-x: auto; border: 1px solid #232733; border-radius: 10px; }}
@@ -161,13 +206,15 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
 </style>
 </head>
 <body>
-  <h1>\U0001F4C8 Unusual Volume Scanner</h1>
+  <h1>{page_emoji} {html.escape(page_title)}</h1>
+  {nav_html}
   <div class="meta">
     Market <b>{html.escape(market.upper())}</b> &middot;
     min RVOL <b>{min_rvol:g}×</b> &middot;
     <b>{n}</b> stock(s) flagged &middot;
     generated <b>{stamp}</b>
     &middot; click a symbol to open its Yahoo Finance chart &middot; click a column to sort
+    <br>{blurb}
   </div>
   <details class="legend" open>
     <summary>What the columns mean</summary>
@@ -200,8 +247,7 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
   </table>
   </div>
   <footer>
-    Educational tool, not financial advice. Volume is end-of-day; figures tagged
-    "consolidated" match Yahoo / brokers. Built with the
+    Educational tool, not financial advice. {blurb} Built with the
     <span class="ext">volume_scanner</span> project.
   </footer>
 <script>

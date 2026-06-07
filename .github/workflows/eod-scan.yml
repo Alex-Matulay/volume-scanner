@@ -6,15 +6,14 @@ on:
     - cron: "0 22 * * 1-5"
   workflow_dispatch: {}   # allow manual "Run workflow" from the Actions tab
 
-# Permissions the GitHub Pages deployment needs.
+# peaceiris/actions-gh-pages pushes the built page to the gh-pages branch.
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# Never run two deployments at once.
+# Serialize all publishes to gh-pages (shared with the intraday workflow) so two
+# runs never push to the branch at the same time.
 concurrency:
-  group: pages
+  group: gh-pages-publish
   cancel-in-progress: false
 
 jobs:
@@ -42,18 +41,9 @@ jobs:
             --earnings \
             --html site/index.html --out site/report.csv
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Publish daily page to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: site
-
-  deploy:
-    needs: scan
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          keep_files: true   # preserve the intraday page on the branch

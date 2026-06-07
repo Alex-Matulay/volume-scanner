@@ -1,0 +1,50 @@
+name: Intraday Volume Scan
+
+on:
+  schedule:
+    # Every 30 min during US market hours. 13:00-21:00 UTC covers 9:30-16:00 ET
+    # across both EDT (summer) and EST (winter). GitHub may delay/skip scheduled
+    # runs under load — that's fine for a through-the-day snapshot.
+    - cron: "*/30 13-21 * * 1-5"
+  workflow_dispatch: {}   # allow manual "Run workflow" from the Actions tab
+
+permissions:
+  contents: write
+
+# Shares the gh-pages publish lock with the EOD workflow so the two never push
+# to the branch simultaneously.
+concurrency:
+  group: gh-pages-publish
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r volume_scanner/requirements.txt
+
+      - name: Run intraday scan and build the page
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+        run: |
+          python -m volume_scanner.cli \
+            --source alpaca --market us --intraday \
+            --intraday-interval 5m --intraday-period 10d \
+            --min-rvol 3 --min-dollar-vol 0 --min-avg-vol 0 --no-enrich \
+            --html site/intraday.html --out site/intraday.csv
+
+      - name: Publish intraday page to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          keep_files: true   # preserve the daily page on the branch
