@@ -40,7 +40,7 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
     n = 0 if df is None else len(df)
 
     has_earn = df is not None and "earnings_note" in df.columns
-    n_cols = (12 if has_earn else 11) + 4  # +4 volatility / flow columns
+    n_cols = 12 + (1 if has_earn else 0)  # symbol..vol-vs-avg (+earnings)
 
     rows_html = []
     if df is not None and not df.empty:
@@ -54,17 +54,12 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
                 pct_f = 0.0
             cls = "up" if pct_f > 0 else ("down" if pct_f < 0 else "flat")
             pct_str = f"{pct_f:+.2f}%"
-            note = html.escape(str(r.get("notes", "") or ""))
 
-            # Volatility (day's range) + buy/sell flow.
+            # Volatility: day's range + range vs. the stock's normal range.
             rng = _fmt_num(r.get("day_range_pct"), 1)
             rng_str = "-" if rng == "-" else rng + "%"
             volx = _fmt_num(r.get("range_vs_avg"), 1)
             volx_str = "-" if volx == "-" else volx + "×"
-            buy = _fmt_num(r.get("buy_vol_pct"), 0)
-            buy_str = "-" if buy == "-" else buy + "%"
-            flow_txt = str(r.get("flow", "") or "")
-            fcls = {"bought up": "flow-buy", "sold off": "flow-sell"}.get(flow_txt, "flow-mix")
             earn_cell = ""
             if has_earn:
                 etxt = html.escape(str(r.get("earnings_note", "") or ""))
@@ -91,9 +86,6 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
                 f'<td class="num {cls}">{pct_str}</td>'
                 f'<td class="num">{rng_str}</td>'
                 f'<td class="num">{volx_str}</td>'
-                f'<td class="num">{buy_str}</td>'
-                f'<td class="{fcls}">{html.escape(flow_txt)}</td>'
-                f'<td class="note">{note}</td>'
                 f'{earn_cell}'
                 "</tr>"
             )
@@ -102,6 +94,27 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
         "for this run.</td></tr>"
     )
     earn_header = "<th>Earnings</th>" if has_earn else ""
+
+    # Legend: a short explanation of every column, shown above the table.
+    legend_items = [
+        ("Symbol", "Ticker (click to open its Yahoo Finance chart)."),
+        ("Date", "Trading day (intraday mode adds the time-of-day)."),
+        ("RVOL", "Relative volume = day volume / 20-day average (3× = 3× normal)."),
+        ("Avg vol", "20-day average daily volume — the RVOL baseline."),
+        ("Day vol", "That day's total volume."),
+        ("Prev-day vol", "Previous day's total volume."),
+        ("Avg vol 10d", "Trailing 10-day average volume."),
+        ("Open / Close", "Day's opening and closing price."),
+        ("% chg", "Close vs. the previous day's close."),
+        ("Range", "Day's high-low swing as % of price — intraday volatility."),
+        ("Vol vs avg", "That swing vs. the stock's average daily range (2× = twice as volatile as usual)."),
+    ]
+    if has_earn:
+        legend_items.append(
+            ("Earnings", "Latest quarterly earnings summary; \U0001F525 = record-quarter revenue, ⚡ = spike right after earnings."))
+    legend_html = "\n".join(
+        f"<li><b>{html.escape(k)}</b> — {html.escape(v)}</li>" for k, v in legend_items
+    )
 
     return f"""<!doctype html>
 <html lang="en">
@@ -132,10 +145,13 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
   .up {{ color: #4ade80; }}
   .down {{ color: #f87171; }}
   .flat {{ color: #9aa4b2; }}
-  .note {{ color: #8b94a3; font-size: .8rem; }}
-  .flow-buy {{ color: #4ade80; font-weight: 600; }}
-  .flow-sell {{ color: #f87171; font-weight: 600; }}
-  .flow-mix {{ color: #9aa4b2; }}
+  details.legend {{ margin: 0 0 1rem; border: 1px solid #232733; border-radius: 10px;
+                    background: #12151c; padding: .4rem .9rem; }}
+  details.legend summary {{ cursor: pointer; color: #cfd6e0; font-weight: 600;
+                            font-size: .9rem; padding: .35rem 0; }}
+  details.legend ul {{ margin: .4rem 0 .6rem; padding-left: 1.1rem;
+                       color: #9aa4b2; font-size: .82rem; line-height: 1.6; }}
+  details.legend b {{ color: #cfd6e0; }}
   .earn {{ color: #b6c0cf; font-size: .8rem; white-space: normal; min-width: 22rem; }}
   .earn.record {{ color: #ffd479; font-weight: 600; }}
   .earn.near {{ color: #7dd3fc; }}
@@ -153,6 +169,12 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
     generated <b>{stamp}</b>
     &middot; click a symbol to open its Yahoo Finance chart &middot; click a column to sort
   </div>
+  <details class="legend" open>
+    <summary>What the columns mean</summary>
+    <ul>
+{legend_html}
+    </ul>
+  </details>
   <div class="wrap">
   <table id="t">
     <thead>
@@ -169,9 +191,6 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
         <th class="num">% chg</th>
         <th class="num">Range</th>
         <th class="num">Vol vs avg</th>
-        <th class="num">Buy vol</th>
-        <th>Flow</th>
-        <th>Notes</th>
         {earn_header}
       </tr>
     </thead>

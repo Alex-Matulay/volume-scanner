@@ -33,9 +33,8 @@ Each symbol on the page links straight to its Yahoo Finance chart.
 | `% chg` | Close vs. previous close. |
 | `Range` | The day's high–low swing as % of price — how volatile the stock was through the day. |
 | `Vol vs avg` | That swing vs. the stock's average daily range (e.g. `2.1×` = twice as volatile as normal). |
-| `Buy vol` | Estimated share of volume that was buying. Daily mode infers it from where the close landed in the day's range; intraday mode measures it directly (volume on up-bars vs down-bars). |
-| `Flow` | `bought up` / `sold off` / `mixed` — was the volume mostly accumulation or distribution. Distinct from `% chg`: a stock can close down on the day yet still be `bought up` if it rallied off its lows. |
-| `Notes` | Data source / quality tag. |
+
+The page itself also carries a collapsible **"What the columns mean"** legend above the table.
 
 ## Run it yourself locally
 

@@ -39,28 +39,54 @@ def _fmt_x(v) -> str:
         return "-"
 
 
+# Short, human-readable explanation of every column shown, printed above the
+# table and rendered as a legend on the HTML page.
+COLUMN_HELP = [
+    ("symbol", "Ticker symbol."),
+    ("date", "Trading day (intraday mode adds the time-of-day)."),
+    ("avg_vol", "20-day average daily volume - the RVOL baseline."),
+    ("day_vol", "That day's total volume."),
+    ("prev_vol", "Previous day's total volume."),
+    ("avg_vol_10d", "Trailing 10-day average volume."),
+    ("rvol", "Relative volume = day_vol / avg_vol (3.0 = 3x normal)."),
+    ("open", "Day's opening price."),
+    ("close", "Day's closing price."),
+    ("%chg", "Close vs. the previous day's close."),
+    ("range%", "Day's high-low swing as % of price - intraday volatility."),
+    ("vol_x", "That swing vs. the stock's average daily range (2.0 = twice as volatile as usual)."),
+    ("earnings", "Latest quarterly earnings summary (only with --earnings)."),
+]
+
+
+def _print_legend(has_earn: bool) -> None:
+    print("\nColumns:")
+    for name, desc in COLUMN_HELP:
+        if name == "earnings" and not has_earn:
+            continue
+        print(f"  {name.ljust(13)} {desc}")
+
+
 def _print_table(df, top: int) -> None:
     if df.empty:
         print("\nNo stocks matched the filters.")
         return
     view = df.head(top)
     has_earn = "earnings_note" in df.columns
-    note_col = "earnings_note" if has_earn else "notes"
-    # Order requested: avg volume, that day's volume, previous day, 10-day avg,
-    # then RVOL, open, close, % change, notes (earnings note if available).
+    _print_legend(has_earn)
     cols = ["symbol", "date", "avg_volume", "last_volume", "prev_volume",
             "avg_volume_10d", "rvol", "open", "close", "pct_change",
-            "day_range_pct", "range_vs_avg", "buy_vol_pct", "flow", note_col]
+            "day_range_pct", "range_vs_avg"]
+    if has_earn:
+        cols.append("earnings_note")
     labels = {"symbol": "symbol", "date": "date", "avg_volume": "avg_vol",
               "last_volume": "day_vol", "prev_volume": "prev_vol",
               "avg_volume_10d": "avg_vol_10d", "rvol": "rvol", "open": "open",
               "close": "close", "pct_change": "%chg", "day_range_pct": "range%",
-              "range_vs_avg": "vol_x", "buy_vol_pct": "buy%", "flow": "flow",
-              "notes": "notes", "earnings_note": "earnings"}
+              "range_vs_avg": "vol_x", "earnings_note": "earnings"}
     widths = {"symbol": 9, "date": 19, "avg_volume": 14, "last_volume": 14,
               "prev_volume": 14, "avg_volume_10d": 14, "rvol": 7, "open": 10,
               "close": 10, "pct_change": 9, "day_range_pct": 8, "range_vs_avg": 7,
-              "buy_vol_pct": 7, "flow": 11, "notes": 28, "earnings_note": 52}
+              "earnings_note": 52}
     header = "".join(labels[c].ljust(widths[c]) for c in cols)
     print("\n" + header)
     print("-" * len(header))
@@ -78,10 +104,9 @@ def _print_table(df, top: int) -> None:
             + f"{r['pct_change']:+.2f}%".ljust(widths["pct_change"])
             + _fmt_pct(r.get("day_range_pct")).ljust(widths["day_range_pct"])
             + _fmt_x(r.get("range_vs_avg")).ljust(widths["range_vs_avg"])
-            + _fmt_pct(r.get("buy_vol_pct"), 0).ljust(widths["buy_vol_pct"])
-            + str(r.get("flow", "")).ljust(widths["flow"])
-            + str(r.get(note_col, "")).ljust(widths[note_col])
         )
+        if has_earn:
+            line += str(r.get("earnings_note", "")).ljust(widths["earnings_note"])
         print(line)
 
 
