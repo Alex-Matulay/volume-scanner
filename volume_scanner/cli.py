@@ -23,6 +23,22 @@ def _fmt_int(n) -> str:
     return f"{int(n):,}" if n is not None else "-"
 
 
+def _fmt_pct(v, dp: int = 1) -> str:
+    try:
+        f = float(v)
+        return "-" if f != f else f"{f:.{dp}f}%"  # f != f -> NaN
+    except (TypeError, ValueError):
+        return "-"
+
+
+def _fmt_x(v) -> str:
+    try:
+        f = float(v)
+        return "-" if f != f else f"{f:.1f}x"
+    except (TypeError, ValueError):
+        return "-"
+
+
 def _print_table(df, top: int) -> None:
     if df.empty:
         print("\nNo stocks matched the filters.")
@@ -33,15 +49,18 @@ def _print_table(df, top: int) -> None:
     # Order requested: avg volume, that day's volume, previous day, 10-day avg,
     # then RVOL, open, close, % change, notes (earnings note if available).
     cols = ["symbol", "date", "avg_volume", "last_volume", "prev_volume",
-            "avg_volume_10d", "rvol", "open", "close", "pct_change", note_col]
+            "avg_volume_10d", "rvol", "open", "close", "pct_change",
+            "day_range_pct", "range_vs_avg", "buy_vol_pct", "flow", note_col]
     labels = {"symbol": "symbol", "date": "date", "avg_volume": "avg_vol",
               "last_volume": "day_vol", "prev_volume": "prev_vol",
               "avg_volume_10d": "avg_vol_10d", "rvol": "rvol", "open": "open",
-              "close": "close", "pct_change": "%chg", "notes": "notes",
-              "earnings_note": "earnings"}
+              "close": "close", "pct_change": "%chg", "day_range_pct": "range%",
+              "range_vs_avg": "vol_x", "buy_vol_pct": "buy%", "flow": "flow",
+              "notes": "notes", "earnings_note": "earnings"}
     widths = {"symbol": 9, "date": 19, "avg_volume": 14, "last_volume": 14,
               "prev_volume": 14, "avg_volume_10d": 14, "rvol": 7, "open": 10,
-              "close": 10, "pct_change": 9, "notes": 28, "earnings_note": 52}
+              "close": 10, "pct_change": 9, "day_range_pct": 8, "range_vs_avg": 7,
+              "buy_vol_pct": 7, "flow": 11, "notes": 28, "earnings_note": 52}
     header = "".join(labels[c].ljust(widths[c]) for c in cols)
     print("\n" + header)
     print("-" * len(header))
@@ -57,6 +76,10 @@ def _print_table(df, top: int) -> None:
             + f"{r['open']:.2f}".ljust(widths["open"])
             + f"{r['close']:.2f}".ljust(widths["close"])
             + f"{r['pct_change']:+.2f}%".ljust(widths["pct_change"])
+            + _fmt_pct(r.get("day_range_pct")).ljust(widths["day_range_pct"])
+            + _fmt_x(r.get("range_vs_avg")).ljust(widths["range_vs_avg"])
+            + _fmt_pct(r.get("buy_vol_pct"), 0).ljust(widths["buy_vol_pct"])
+            + str(r.get("flow", "")).ljust(widths["flow"])
             + str(r.get(note_col, "")).ljust(widths[note_col])
         )
         print(line)

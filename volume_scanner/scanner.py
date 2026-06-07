@@ -79,6 +79,8 @@ def _metrics_for(df: pd.DataFrame, ticker: str, cfg: ScanConfig) -> dict | None:
     vol = df["Volume"].astype(float)
     close = df["Close"].astype(float)
     open_ = df["Open"].astype(float) if "Open" in df.columns else close
+    high = df["High"].astype(float) if "High" in df.columns else pd.concat([open_, close], axis=1).max(axis=1)
+    low = df["Low"].astype(float) if "Low" in df.columns else pd.concat([open_, close], axis=1).min(axis=1)
 
     last_vol = float(vol.iloc[-1])
     prev_vol = float(vol.iloc[-2])
@@ -93,12 +95,34 @@ def _metrics_for(df: pd.DataFrame, ticker: str, cfg: ScanConfig) -> dict | None:
 
     last_open = float(open_.iloc[-1])
     last_close = float(close.iloc[-1])
+    last_high = float(high.iloc[-1])
+    last_low = float(low.iloc[-1])
     prev_close = float(close.iloc[-2])
     pct_change = (last_close / prev_close - 1.0) * 100.0 if prev_close else float("nan")
     dollar_vol = last_vol * last_close
 
     rvol = last_vol / avg
     zscore = (last_vol - avg) / std if std > 0 else float("nan")
+
+    # --- Intraday volatility (the day's high-low swing) ---------------------
+    day_range = last_high - last_low
+    day_range_pct = day_range / last_close * 100.0 if last_close else float("nan")
+    # How volatile vs. its own normal: today's range / average daily range.
+    day_ranges = (high - low).iloc[-(cfg.lookback_days + 1) : -1]
+    avg_range = float(day_ranges.mean()) if len(day_ranges) else float("nan")
+    range_vs_avg = day_range / avg_range if avg_range and avg_range > 0 else float("nan")
+
+    # --- Up vs. down volume (bought up vs. sold off) -----------------------
+    # With a daily bar we can't see each trade, so infer pressure from where the
+    # close landed in the day's range (Close Location Value, -1..+1): closing
+    # near the high = buyers won; near the low = sellers won. Map to an estimated
+    # buy-volume share so it reads like "~70% buying".
+    if day_range > 0:
+        clv = ((last_close - last_low) - (last_high - last_close)) / day_range
+    else:
+        clv = 0.0
+    buy_vol_pct = (clv + 1.0) / 2.0 * 100.0
+    flow = "bought up" if clv >= 0.3 else ("sold off" if clv <= -0.3 else "mixed")
 
     return {
         "symbol": ticker,
@@ -111,6 +135,10 @@ def _metrics_for(df: pd.DataFrame, ticker: str, cfg: ScanConfig) -> dict | None:
         "open": round(last_open, 4),
         "close": round(last_close, 4),
         "pct_change": round(pct_change, 2),
+        "day_range_pct": round(day_range_pct, 2) if not math.isnan(day_range_pct) else None,
+        "range_vs_avg": round(range_vs_avg, 2) if not math.isnan(range_vs_avg) else None,
+        "buy_vol_pct": round(buy_vol_pct, 1),
+        "flow": flow,
         "vol_zscore": round(zscore, 2) if not math.isnan(zscore) else None,
         "dollar_vol": int(dollar_vol),
         "direction": "up" if pct_change > 0 else ("down" if pct_change < 0 else "flat"),
@@ -121,6 +149,7 @@ def _metrics_for(df: pd.DataFrame, ticker: str, cfg: ScanConfig) -> dict | None:
 _RESULT_COLS = [
     "symbol", "date", "avg_volume", "last_volume", "prev_volume",
     "avg_volume_10d", "rvol", "open", "close", "pct_change",
+    "day_range_pct", "range_vs_avg", "buy_vol_pct", "flow",
     "vol_zscore", "dollar_vol", "direction", "notes",
 ]
 
@@ -323,11 +352,16 @@ def _intraday_metrics(df: pd.DataFrame, ticker: str, cfg: ScanConfig) -> dict | 
 
     day = pd.Index([ts.date() for ts in df.index])
     tod = pd.Index([ts.strftime("%H:%M") for ts in df.index])  # zero-padded, sortable
+    close_vals = df["Close"].astype(float).values
     open_vals = (df["Open"] if "Open" in df.columns else df["Close"]).astype(float).values
+    high_vals = (df["High"] if "High" in df.columns else df["Close"]).astype(float).values
+    low_vals = (df["Low"] if "Low" in df.columns else df["Close"]).astype(float).values
     work = pd.DataFrame(
         {"vol": df["Volume"].astype(float).values,
-         "close": df["Close"].astype(float).values,
+         "close": close_vals,
          "open": open_vals,
+         "high": high_vals,
+         "low": low_vals,
          "day": day, "tod": tod},
         index=range(len(df)),
     )
@@ -374,6 +408,36 @@ def _intraday_metrics(df: pd.DataFrame, ticker: str, cfg: ScanConfig) -> dict | 
     zscore = (today_cum - avg) / std if std > 0 else float("nan")
     dollar_vol = today_cum * last_close
 
+    # --- Intraday volatility (today's high-low swing so far) ----------------
+    day_high = float(today_rows["high"].max())
+    day_low = float(today_rows["low"].min())
+    day_range_pct = (day_high - day_low) / last_close * 100.0 if last_close else float("nan")
+    # vs. the typical full-day range on prior sessions
+    prior = work[work["day"] != today]
+    if not prior.empty:
+        per_day = prior.groupby("day").agg(hi=("high", "max"), lo=("low", "min"))
+        avg_range = float((per_day["hi"] - per_day["lo"]).mean())
+    else:
+        avg_range = float("nan")
+    range_vs_avg = (day_high - day_low) / avg_range if avg_range and avg_range > 0 else float("nan")
+
+    # --- True up vs. down volume (we have every bar here) -------------------
+    # Classify each bar as buying (close >= open) or selling (close < open) and
+    # sum the volume — a real measured split, not the daily-bar approximation.
+    up_mask = today_rows["close"].values >= today_rows["open"].values
+    up_vol = float(today_rows["vol"].values[up_mask].sum())
+    down_vol = float(today_rows["vol"].values[~up_mask].sum())
+    traded = up_vol + down_vol
+    buy_vol_pct = up_vol / traded * 100.0 if traded > 0 else float("nan")
+    if math.isnan(buy_vol_pct):
+        flow = "mixed"
+    elif buy_vol_pct >= 60.0:
+        flow = "bought up"
+    elif buy_vol_pct <= 40.0:
+        flow = "sold off"
+    else:
+        flow = "mixed"
+
     return {
         "symbol": ticker,
         "date": f"{today.isoformat()} {as_of}",
@@ -385,6 +449,10 @@ def _intraday_metrics(df: pd.DataFrame, ticker: str, cfg: ScanConfig) -> dict | 
         "open": round(last_open, 4),
         "close": round(last_close, 4),
         "pct_change": round(pct_change, 2),
+        "day_range_pct": round(day_range_pct, 2) if not math.isnan(day_range_pct) else None,
+        "range_vs_avg": round(range_vs_avg, 2) if not math.isnan(range_vs_avg) else None,
+        "buy_vol_pct": round(buy_vol_pct, 1) if not math.isnan(buy_vol_pct) else None,
+        "flow": flow,
         "vol_zscore": round(zscore, 2) if not math.isnan(zscore) else None,
         "dollar_vol": int(dollar_vol),
         "direction": "up" if pct_change > 0 else ("down" if pct_change < 0 else "flat"),

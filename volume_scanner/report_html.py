@@ -26,7 +26,8 @@ def _fmt_int(v) -> str:
 
 def _fmt_num(v, dp: int = 2) -> str:
     try:
-        return f"{float(v):,.{dp}f}"
+        f = float(v)
+        return "-" if f != f else f"{f:,.{dp}f}"  # f != f -> NaN
     except (TypeError, ValueError):
         return "-"
 
@@ -39,7 +40,7 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
     n = 0 if df is None else len(df)
 
     has_earn = df is not None and "earnings_note" in df.columns
-    n_cols = 12 if has_earn else 11
+    n_cols = (12 if has_earn else 11) + 4  # +4 volatility / flow columns
 
     rows_html = []
     if df is not None and not df.empty:
@@ -54,6 +55,16 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
             cls = "up" if pct_f > 0 else ("down" if pct_f < 0 else "flat")
             pct_str = f"{pct_f:+.2f}%"
             note = html.escape(str(r.get("notes", "") or ""))
+
+            # Volatility (day's range) + buy/sell flow.
+            rng = _fmt_num(r.get("day_range_pct"), 1)
+            rng_str = "-" if rng == "-" else rng + "%"
+            volx = _fmt_num(r.get("range_vs_avg"), 1)
+            volx_str = "-" if volx == "-" else volx + "×"
+            buy = _fmt_num(r.get("buy_vol_pct"), 0)
+            buy_str = "-" if buy == "-" else buy + "%"
+            flow_txt = str(r.get("flow", "") or "")
+            fcls = {"bought up": "flow-buy", "sold off": "flow-sell"}.get(flow_txt, "flow-mix")
             earn_cell = ""
             if has_earn:
                 etxt = html.escape(str(r.get("earnings_note", "") or ""))
@@ -78,6 +89,10 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
                 f'<td class="num">{_fmt_num(r.get("open"))}</td>'
                 f'<td class="num">{_fmt_num(r.get("close"))}</td>'
                 f'<td class="num {cls}">{pct_str}</td>'
+                f'<td class="num">{rng_str}</td>'
+                f'<td class="num">{volx_str}</td>'
+                f'<td class="num">{buy_str}</td>'
+                f'<td class="{fcls}">{html.escape(flow_txt)}</td>'
                 f'<td class="note">{note}</td>'
                 f'{earn_cell}'
                 "</tr>"
@@ -118,6 +133,9 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
   .down {{ color: #f87171; }}
   .flat {{ color: #9aa4b2; }}
   .note {{ color: #8b94a3; font-size: .8rem; }}
+  .flow-buy {{ color: #4ade80; font-weight: 600; }}
+  .flow-sell {{ color: #f87171; font-weight: 600; }}
+  .flow-mix {{ color: #9aa4b2; }}
   .earn {{ color: #b6c0cf; font-size: .8rem; white-space: normal; min-width: 22rem; }}
   .earn.record {{ color: #ffd479; font-weight: 600; }}
   .earn.near {{ color: #7dd3fc; }}
@@ -149,6 +167,10 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
         <th class="num">Open</th>
         <th class="num">Close</th>
         <th class="num">% chg</th>
+        <th class="num">Range</th>
+        <th class="num">Vol vs avg</th>
+        <th class="num">Buy vol</th>
+        <th>Flow</th>
         <th>Notes</th>
         {earn_header}
       </tr>
