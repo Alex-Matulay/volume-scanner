@@ -373,7 +373,11 @@ def _intraday_metrics(df: pd.DataFrame, ticker: str, cfg: ScanConfig) -> dict | 
     work["cum"] = work.groupby("day")["vol"].cumsum()
 
     days = sorted(work["day"].unique())
-    if len(days) < 4:  # need today + a few baseline sessions
+    # Need today + at least 2 prior sessions for a baseline. Kept deliberately low
+    # so names that barely trade on the free IEX feed on normal days (e.g. sub-$1
+    # stocks) — where that thin history is itself the spike signal — still pass the
+    # screen and reach the consolidated yfinance re-measure, which has full history.
+    if len(days) < 3:
         return None
     today = days[-1]
     prev_day = days[-2]
@@ -396,7 +400,7 @@ def _intraday_metrics(df: pd.DataFrame, ticker: str, cfg: ScanConfig) -> dict | 
         .reindex(days[:-1])
         .dropna()
     )
-    if len(prior_totals) < 3:
+    if len(prior_totals) < 2:
         return None
     base = prior_totals.iloc[-cfg.lookback_days:]   # up to the last 20 sessions
     avg = float(base.mean())                          # 20-day average DAILY volume
