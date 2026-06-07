@@ -48,9 +48,9 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
     page_emoji = "⚡" if intraday else "\U0001F4C8"
     if intraday:
         blurb = ("Live during the US session: today's cumulative volume vs. the "
-                 "average for the same time-of-day. Volume is Alpaca's free IEX "
-                 "feed (a fraction of total), so the RVOL ratio is the signal, "
-                 "not the absolute share count.")
+                 "average for the same time-of-day. Candidates are screened fast, "
+                 "then re-measured on consolidated volume — figures match "
+                 "TradingView / brokers.")
     else:
         blurb = ('Volume is end-of-day; figures tagged "consolidated" match '
                  "Yahoo / brokers.")
