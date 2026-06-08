@@ -41,6 +41,8 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
     """
     generated_at = generated_at or datetime.now(timezone.utc)
     stamp = generated_at.strftime("%Y-%m-%d %H:%M UTC")
+    gen_epoch_ms = int(generated_at.timestamp() * 1000)  # for the live freshness badge
+    js_intraday = "true" if mode == "intraday" else "false"
     n = 0 if df is None else len(df)
 
     intraday = mode == "intraday"
@@ -216,11 +218,23 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
   .empty {{ text-align: center; color: #9aa4b2; padding: 2rem; }}
   footer {{ margin-top: 1rem; color: #6b7280; font-size: .78rem; }}
   a.ext {{ color: #6ea8fe; }}
+  .freshness {{ display: inline-flex; align-items: center; gap: .4rem;
+                padding: .25rem .7rem; border-radius: 999px; font-size: .82rem;
+                font-weight: 600; border: 1px solid transparent; }}
+  .freshness::before {{ content: ""; width: .55rem; height: .55rem;
+                        border-radius: 50%; background: currentColor; }}
+  .freshness.fresh-ok {{ color: #4ade80; background: #102417; border-color: #1e4d2f; }}
+  .freshness.fresh-warn {{ color: #fbbf24; background: #2a2310; border-color: #574716; }}
+  .freshness.fresh-bad {{ color: #f87171; background: #2a1313; border-color: #5a2020; }}
+  .freshness.fresh-idle {{ color: #9aa4b2; background: #161a22; border-color: #2c3140; }}
 </style>
 </head>
 <body>
   <h1>{page_emoji} {html.escape(page_title)}</h1>
   {nav_html}
+  <div style="margin: .2rem 0 .8rem;">
+    <span id="freshness" class="freshness fresh-idle">checking freshness…</span>
+  </div>
   <div class="meta">
     Market <b>{html.escape(market.upper())}</b> &middot;
     min RVOL <b>{min_rvol:g}×</b> &middot;
@@ -282,6 +296,59 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
       rows.forEach(r => tbody.appendChild(r));
     }});
   }});
+}})();
+
+// Live "last updated" badge. The page is static, so the age is computed in the
+// viewer's browser from the build timestamp — a frozen page (dead token, missed
+// run) visibly drifts to amber/red instead of looking identical to a fresh one.
+(function () {{
+  const el = document.getElementById('freshness');
+  if (!el) return;
+  const genMs = {gen_epoch_ms};
+  const intraday = {js_intraday};
+  function ago(ms) {{
+    const m = Math.floor(ms / 60000);
+    if (m < 1) return 'just now';
+    if (m < 60) return m + ' min ago';
+    const h = Math.floor(m / 60);
+    if (h < 24) return h + 'h ' + (m % 60) + 'm ago';
+    const d = Math.floor(h / 24);
+    return d + 'd ' + (h % 24) + 'h ago';
+  }}
+  function marketOpen(now) {{
+    const day = now.getUTCDay();                 // 0 Sun .. 6 Sat
+    if (day === 0 || day === 6) return false;
+    const mins = now.getUTCHours() * 60 + now.getUTCMinutes();
+    return mins >= 13 * 60 + 30 && mins <= 20 * 60 + 15;  // ~9:30-16:15 ET
+  }}
+  function tick() {{
+    const now = new Date();
+    const age = now.getTime() - genMs;
+    let cls, label;
+    if (intraday) {{
+      if (!marketOpen(now)) {{
+        cls = 'fresh-idle'; label = 'Market closed · updated ' + ago(age);
+      }} else if (age < 40 * 60000) {{
+        cls = 'fresh-ok'; label = 'Updated ' + ago(age);
+      }} else if (age < 90 * 60000) {{
+        cls = 'fresh-warn'; label = 'Updated ' + ago(age) + ' — may be stale';
+      }} else {{
+        cls = 'fresh-bad'; label = 'Stale · last updated ' + ago(age);
+      }}
+    }} else {{
+      if (age < 30 * 3600000) {{
+        cls = 'fresh-ok'; label = 'Updated ' + ago(age);
+      }} else if (age < 80 * 3600000) {{
+        cls = 'fresh-warn'; label = 'Updated ' + ago(age);
+      }} else {{
+        cls = 'fresh-bad'; label = 'Stale · last updated ' + ago(age);
+      }}
+    }}
+    el.className = 'freshness ' + cls;
+    el.textContent = label;
+  }}
+  tick();
+  setInterval(tick, 30000);
 }})();
 </script>
 </body>
