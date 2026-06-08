@@ -227,13 +227,21 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
   .freshness.fresh-warn {{ color: #fbbf24; background: #2a2310; border-color: #574716; }}
   .freshness.fresh-bad {{ color: #f87171; background: #2a1313; border-color: #5a2020; }}
   .freshness.fresh-idle {{ color: #9aa4b2; background: #161a22; border-color: #2c3140; }}
+  .times {{ color: #9aa4b2; font-size: .82rem; margin-left: .6rem; }}
+  .mkthours {{ color: #9aa4b2; font-size: .82rem; margin: 0 0 1rem; }}
+  .mkthours b {{ color: #cfd6e0; }}
 </style>
 </head>
 <body>
   <h1>{page_emoji} {html.escape(page_title)}</h1>
   {nav_html}
-  <div style="margin: .2rem 0 .8rem;">
+  <div style="margin: .2rem 0 .5rem;">
     <span id="freshness" class="freshness fresh-idle">checking freshness…</span>
+    <span id="uptimes" class="times"></span>
+  </div>
+  <div class="mkthours">
+    \U0001F4C5 <b>US market open:</b> Mon–Fri, 9:30 AM – 4:00 PM New York time
+    (≈ 2:30 PM – 9:00 PM London · 13:30 – 20:00 UTC). Closed weekends &amp; US holidays.
   </div>
   <div class="meta">
     Market <b>{html.escape(market.upper())}</b> &middot;
@@ -306,6 +314,17 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
   if (!el) return;
   const genMs = {gen_epoch_ms};
   const intraday = {js_intraday};
+  // Show the update time in London and New York (browser handles DST correctly).
+  const ut = document.getElementById('uptimes');
+  if (ut) {{
+    const opt = {{ weekday: 'short', day: '2-digit', month: 'short',
+                  hour: '2-digit', minute: '2-digit' }};
+    const lon = new Date(genMs).toLocaleString('en-GB',
+                  Object.assign({{ timeZone: 'Europe/London' }}, opt));
+    const ny = new Date(genMs).toLocaleString('en-US',
+                  Object.assign({{ timeZone: 'America/New_York' }}, opt));
+    ut.textContent = '· ' + lon + ' London · ' + ny + ' New York';
+  }}
   function ago(ms) {{
     const m = Math.floor(ms / 60000);
     if (m < 1) return 'just now';
