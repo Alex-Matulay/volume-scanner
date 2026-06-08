@@ -2,10 +2,15 @@ name: Intraday Volume Scan
 
 on:
   schedule:
-    # Every 30 min during US market hours. 13:00-21:00 UTC covers 9:30-16:00 ET
-    # across both EDT (summer) and EST (winter). GitHub may delay/skip scheduled
-    # runs under load — that's fine for a through-the-day snapshot.
-    - cron: "*/30 13-21 * * 1-5"
+    # US market hours, 13:00-21:00 UTC (9:30-16:00 ET across EDT/EST). GitHub
+    # delays and silently DROPS scheduled runs under load — worst at the top/half
+    # hour when everyone's crons fire. So we (a) avoid :00 and :30 and (b) stack
+    # three offset schedules: if one tick is dropped, a backup fires minutes later.
+    # Effective cadence ~every 10 min when GitHub cooperates, ~30 min worst case.
+    # The shared gh-pages-publish concurrency group serializes overlapping runs.
+    - cron: "7,37 13-21 * * 1-5"
+    - cron: "17,47 13-21 * * 1-5"
+    - cron: "27,57 13-21 * * 1-5"
   workflow_dispatch: {}   # allow manual "Run workflow" from the Actions tab
 
 permissions:
