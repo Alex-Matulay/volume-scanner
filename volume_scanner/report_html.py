@@ -8,6 +8,7 @@ to its Yahoo Finance quote/chart page so you can open a chart in one click.
 from __future__ import annotations
 
 import html
+import json
 import os
 from datetime import datetime, timezone
 
@@ -32,45 +33,9 @@ def _fmt_num(v, dp: int = 2) -> str:
         return "-"
 
 
-def render(df, *, market: str = "us", min_rvol: float = 3.0,
-           generated_at: datetime | None = None, mode: str = "eod") -> str:
-    """Return a full HTML document string for the given results DataFrame.
-
-    mode: "eod" (end-of-day) or "intraday" (refreshed through the session).
-    The two pages live side by side (index.html / intraday.html) and cross-link.
-    """
-    generated_at = generated_at or datetime.now(timezone.utc)
-    stamp = generated_at.strftime("%Y-%m-%d %H:%M UTC")
-    gen_epoch_ms = int(generated_at.timestamp() * 1000)  # for the live freshness badge
-    js_intraday = "true" if mode == "intraday" else "false"
-    n = 0 if df is None else len(df)
-
-    intraday = mode == "intraday"
-    page_title = "Intraday Volume Scanner" if intraday else "Unusual Volume Scanner"
-    page_emoji = "⚡" if intraday else "\U0001F4C8"
-    if intraday:
-        blurb = ("Live during the US session: today's cumulative volume so far vs. "
-                 "the 20-day average daily volume — so RVOL builds through the day "
-                 "(3× = already 3× a normal full day) and converges with the daily "
-                 "scan at the close. Figures are consolidated (match TradingView / "
-                 "brokers).")
-    else:
-        blurb = ('Volume is end-of-day; figures tagged "consolidated" match '
-                 "Yahoo / brokers.")
-    # Cross-link nav (active tab highlighted).
-    nav_html = (
-        '<nav class="tabs">'
-        f'<a class="{"active" if not intraday else ""}" href="index.html">\U0001F4C8 Daily (EOD)</a>'
-        f'<a class="{"active" if intraday else ""}" href="intraday.html">⚡ Intraday</a>'
-        "</nav>"
-    )
-
-    has_earn = df is not None and "earnings_note" in df.columns
-    # Intraday drops the point-in-time price columns (close/%chg/range/vol-vs-avg)
-    # since they keep changing through the session; it keeps the volume metrics.
-    base_cols = 8 if intraday else 12  # symbol..open (+price cols for EOD)
-    n_cols = base_cols + (1 if has_earn else 0)
-
+def _rows_html(df, *, intraday: bool, has_earn: bool, n_cols: int) -> str:
+    """Render the <tbody> rows. Shared by the static page and the JSON payload
+    the page polls, so refreshed rows are formatted identically."""
     rows_html = []
     if df is not None and not df.empty:
         for _, r in df.iterrows():
@@ -123,10 +88,75 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
                 f'{earn_cell}'
                 "</tr>"
             )
-    body_rows = "\n".join(rows_html) or (
+    return "\n".join(rows_html) or (
         f'<tr><td colspan="{n_cols}" class="empty">No stocks matched the filters '
         "for this run.</td></tr>"
     )
+
+
+def payload(df, *, market: str = "us", min_rvol: float = 3.0,
+            generated_at: datetime | None = None, mode: str = "eod") -> dict:
+    """JSON-serializable snapshot the static page polls to refresh in place."""
+    generated_at = generated_at or datetime.now(timezone.utc)
+    intraday = mode == "intraday"
+    has_earn = df is not None and "earnings_note" in df.columns
+    n_cols = (8 if intraday else 12) + (1 if has_earn else 0)
+    return {
+        "generated_ms": int(generated_at.timestamp() * 1000),
+        "generated": generated_at.strftime("%Y-%m-%d %H:%M UTC"),
+        "market": market,
+        "min_rvol": float(min_rvol),
+        "mode": mode,
+        "n": 0 if df is None else int(len(df)),
+        "rows_html": _rows_html(df, intraday=intraday, has_earn=has_earn,
+                                n_cols=n_cols),
+    }
+
+
+def render(df, *, market: str = "us", min_rvol: float = 3.0,
+           generated_at: datetime | None = None, mode: str = "eod",
+           data_url: str | None = None) -> str:
+    """Return a full HTML document string for the given results DataFrame.
+
+    mode: "eod" (end-of-day) or "intraday" (refreshed through the session).
+    The two pages live side by side (index.html / intraday.html) and cross-link.
+    data_url: relative URL of the JSON snapshot the page should poll to
+    refresh itself in place (None disables auto-refresh).
+    """
+    generated_at = generated_at or datetime.now(timezone.utc)
+    stamp = generated_at.strftime("%Y-%m-%d %H:%M UTC")
+    gen_epoch_ms = int(generated_at.timestamp() * 1000)  # for the live freshness badge
+    js_intraday = "true" if mode == "intraday" else "false"
+    js_data_url = json.dumps(data_url)  # 'null' or '"intraday.json"'
+    n = 0 if df is None else len(df)
+
+    intraday = mode == "intraday"
+    page_title = "Intraday Volume Scanner" if intraday else "Unusual Volume Scanner"
+    page_emoji = "⚡" if intraday else "\U0001F4C8"
+    if intraday:
+        blurb = ("Live during the US session: today's cumulative volume so far vs. "
+                 "the 20-day average daily volume — so RVOL builds through the day "
+                 "(3× = already 3× a normal full day) and converges with the daily "
+                 "scan at the close. Figures are consolidated (match TradingView / "
+                 "brokers).")
+    else:
+        blurb = ('Volume is end-of-day; figures tagged "consolidated" match '
+                 "Yahoo / brokers.")
+    # Cross-link nav (active tab highlighted).
+    nav_html = (
+        '<nav class="tabs">'
+        f'<a class="{"active" if not intraday else ""}" href="index.html">\U0001F4C8 Daily (EOD)</a>'
+        f'<a class="{"active" if intraday else ""}" href="intraday.html">⚡ Intraday</a>'
+        "</nav>"
+    )
+
+    has_earn = df is not None and "earnings_note" in df.columns
+    # Intraday drops the point-in-time price columns (close/%chg/range/vol-vs-avg)
+    # since they keep changing through the session; it keeps the volume metrics.
+    base_cols = 8 if intraday else 12  # symbol..open (+price cols for EOD)
+    n_cols = base_cols + (1 if has_earn else 0)
+
+    body_rows = _rows_html(df, intraday=intraday, has_earn=has_earn, n_cols=n_cols)
     earn_header = "<th>Earnings</th>" if has_earn else ""
     price_headers = "" if intraday else (
         '<th class="num">Close</th>'
@@ -246,8 +276,8 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
   <div class="meta">
     Market <b>{html.escape(market.upper())}</b> &middot;
     min RVOL <b>{min_rvol:g}×</b> &middot;
-    <b>{n}</b> stock(s) flagged &middot;
-    generated <b>{stamp}</b>
+    <b id="nflag">{n}</b> stock(s) flagged &middot;
+    generated <b id="genstamp">{stamp}</b>
     &middot; click a symbol to open its Yahoo Finance chart &middot; click a column to sort
     <br>{blurb}
   </div>
@@ -283,6 +313,12 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
     <span class="ext">volume_scanner</span> project.
   </footer>
 <script>
+// Shared by the freshness badge and the auto-refresh poller below. genMs is
+// mutable: it advances whenever the poller swaps in a newer snapshot.
+let genMs = {gen_epoch_ms};
+const intraday = {js_intraday};
+const dataUrl = {js_data_url};
+
 (function () {{
   const table = document.getElementById('t');
   if (!table) return;
@@ -306,68 +342,92 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
   }});
 }})();
 
-// Live "last updated" badge. The page is static, so the age is computed in the
-// viewer's browser from the build timestamp — a frozen page (dead token, missed
-// run) visibly drifts to amber/red instead of looking identical to a fresh one.
-(function () {{
+// Live "last updated" badge. The age is computed in the viewer's browser from
+// the snapshot timestamp — a frozen page (dead token, missed run) visibly
+// drifts to amber/red instead of looking identical to a fresh one.
+// Show the update time in London and New York (browser handles DST correctly).
+function fillTimes() {{
+  const ut = document.getElementById('uptimes');
+  if (!ut) return;
+  const opt = {{ weekday: 'short', day: '2-digit', month: 'short',
+                hour: '2-digit', minute: '2-digit' }};
+  const lon = new Date(genMs).toLocaleString('en-GB',
+                Object.assign({{ timeZone: 'Europe/London' }}, opt));
+  const ny = new Date(genMs).toLocaleString('en-US',
+                Object.assign({{ timeZone: 'America/New_York' }}, opt));
+  ut.textContent = '· ' + lon + ' London · ' + ny + ' New York';
+}}
+function ago(ms) {{
+  const m = Math.floor(ms / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return m + ' min ago';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + 'h ' + (m % 60) + 'm ago';
+  const d = Math.floor(h / 24);
+  return d + 'd ' + (h % 24) + 'h ago';
+}}
+function marketOpen(now) {{
+  const day = now.getUTCDay();                 // 0 Sun .. 6 Sat
+  if (day === 0 || day === 6) return false;
+  const mins = now.getUTCHours() * 60 + now.getUTCMinutes();
+  return mins >= 13 * 60 + 30 && mins <= 20 * 60 + 15;  // ~9:30-16:15 ET
+}}
+function tick() {{
   const el = document.getElementById('freshness');
   if (!el) return;
-  const genMs = {gen_epoch_ms};
-  const intraday = {js_intraday};
-  // Show the update time in London and New York (browser handles DST correctly).
-  const ut = document.getElementById('uptimes');
-  if (ut) {{
-    const opt = {{ weekday: 'short', day: '2-digit', month: 'short',
-                  hour: '2-digit', minute: '2-digit' }};
-    const lon = new Date(genMs).toLocaleString('en-GB',
-                  Object.assign({{ timeZone: 'Europe/London' }}, opt));
-    const ny = new Date(genMs).toLocaleString('en-US',
-                  Object.assign({{ timeZone: 'America/New_York' }}, opt));
-    ut.textContent = '· ' + lon + ' London · ' + ny + ' New York';
-  }}
-  function ago(ms) {{
-    const m = Math.floor(ms / 60000);
-    if (m < 1) return 'just now';
-    if (m < 60) return m + ' min ago';
-    const h = Math.floor(m / 60);
-    if (h < 24) return h + 'h ' + (m % 60) + 'm ago';
-    const d = Math.floor(h / 24);
-    return d + 'd ' + (h % 24) + 'h ago';
-  }}
-  function marketOpen(now) {{
-    const day = now.getUTCDay();                 // 0 Sun .. 6 Sat
-    if (day === 0 || day === 6) return false;
-    const mins = now.getUTCHours() * 60 + now.getUTCMinutes();
-    return mins >= 13 * 60 + 30 && mins <= 20 * 60 + 15;  // ~9:30-16:15 ET
-  }}
-  function tick() {{
-    const now = new Date();
-    const age = now.getTime() - genMs;
-    let cls, label;
-    if (intraday) {{
-      if (!marketOpen(now)) {{
-        cls = 'fresh-idle'; label = 'Market closed · updated ' + ago(age);
-      }} else if (age < 40 * 60000) {{
-        cls = 'fresh-ok'; label = 'Updated ' + ago(age);
-      }} else if (age < 90 * 60000) {{
-        cls = 'fresh-warn'; label = 'Updated ' + ago(age) + ' — may be stale';
-      }} else {{
-        cls = 'fresh-bad'; label = 'Stale · last updated ' + ago(age);
-      }}
+  const now = new Date();
+  const age = now.getTime() - genMs;
+  let cls, label;
+  if (intraday) {{
+    if (!marketOpen(now)) {{
+      cls = 'fresh-idle'; label = 'Market closed · updated ' + ago(age);
+    }} else if (age < 40 * 60000) {{
+      cls = 'fresh-ok'; label = 'Updated ' + ago(age);
+    }} else if (age < 90 * 60000) {{
+      cls = 'fresh-warn'; label = 'Updated ' + ago(age) + ' — may be stale';
     }} else {{
-      if (age < 30 * 3600000) {{
-        cls = 'fresh-ok'; label = 'Updated ' + ago(age);
-      }} else if (age < 80 * 3600000) {{
-        cls = 'fresh-warn'; label = 'Updated ' + ago(age);
-      }} else {{
-        cls = 'fresh-bad'; label = 'Stale · last updated ' + ago(age);
-      }}
+      cls = 'fresh-bad'; label = 'Stale · last updated ' + ago(age);
     }}
-    el.className = 'freshness ' + cls;
-    el.textContent = label;
+  }} else {{
+    if (age < 30 * 3600000) {{
+      cls = 'fresh-ok'; label = 'Updated ' + ago(age);
+    }} else if (age < 80 * 3600000) {{
+      cls = 'fresh-warn'; label = 'Updated ' + ago(age);
+    }} else {{
+      cls = 'fresh-bad'; label = 'Stale · last updated ' + ago(age);
+    }}
   }}
-  tick();
-  setInterval(tick, 30000);
+  el.className = 'freshness ' + cls;
+  el.textContent = label;
+}}
+fillTimes();
+tick();
+setInterval(tick, 30000);
+
+// Auto-refresh: poll the sibling JSON snapshot and swap the table rows in
+// place, so an open tab keeps showing the latest published scan without a
+// manual reload. The ?t= cache-buster defeats the Pages CDN per-URL cache.
+(function () {{
+  if (!dataUrl || !window.fetch) return;
+  const tbody = document.querySelector('#t tbody');
+  if (!tbody) return;
+  async function refresh() {{
+    try {{
+      const r = await fetch(dataUrl + '?t=' + Date.now(), {{ cache: 'no-store' }});
+      if (!r.ok) return;
+      const d = await r.json();
+      if (!d || !d.rows_html || !(d.generated_ms > genMs)) return;
+      tbody.innerHTML = d.rows_html;
+      genMs = d.generated_ms;
+      const nEl = document.getElementById('nflag');
+      if (nEl) nEl.textContent = d.n;
+      const st = document.getElementById('genstamp');
+      if (st) st.textContent = d.generated;
+      fillTimes();
+      tick();
+    }} catch (e) {{ /* transient network error — try again next interval */ }}
+  }}
+  setInterval(refresh, 60000);
 }})();
 </script>
 </body>
@@ -376,9 +436,15 @@ def render(df, *, market: str = "us", min_rvol: float = 3.0,
 
 
 def write(df, path: str, **meta) -> str:
+    """Write the HTML page plus a sibling .json snapshot the page polls."""
     d = os.path.dirname(path)
     if d:
         os.makedirs(d, exist_ok=True)
+    # One timestamp for both files so the page doesn't immediately "update".
+    meta.setdefault("generated_at", datetime.now(timezone.utc))
+    json_path = os.path.splitext(path)[0] + ".json"
     with open(path, "w", encoding="utf-8") as f:
-        f.write(render(df, **meta))
+        f.write(render(df, data_url=os.path.basename(json_path), **meta))
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(payload(df, **meta), f, ensure_ascii=False)
     return path
