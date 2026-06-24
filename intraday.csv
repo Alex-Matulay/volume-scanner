@@ -1,5 +1,5 @@
 symbol,date,avg_volume,last_volume,prev_volume,avg_volume_10d,rvol,open,close,pct_change,day_range_pct,range_vs_avg,buy_vol_pct,flow,vol_zscore,dollar_vol,direction,notes
-FRTT,2026-06-24 09:40,102329,45636499,19414,105187,445.98,3.1403,3.3398,86.06,29.64,1.78,77.1,bought up,373.55,152416773,up,yfinance (consolidated)
-CALC,2026-06-24 09:40,304406,48501122,55075,113797,159.33,0.8,0.8028,0.1,7.95,0.6,0.8,sold off,79.99,38936700,up,yfinance (consolidated)
-VTAK,2026-06-24 09:40,3351219,48917407,36948491,6653178,14.6,1.425,1.53,62.42,16.34,2.48,11.6,sold off,4.46,74843631,up,yfinance (consolidated)
-MRNO,2026-06-24 09:35,715664,6957030,80522,383291,9.72,0.2411,0.2498,-2.04,5.52,0.27,0.4,sold off,5.71,1737866,down,yfinance (consolidated)
+FRTT,2026-06-24 09:55,102329,55848706,19414,105187,545.77,3.1403,3.1699,76.6,31.23,1.78,73.0,bought up,457.33,177034809,up,yfinance (consolidated)
+CALC,2026-06-24 09:55,304406,49082466,55075,113797,161.24,0.8,0.7675,-4.3,8.33,0.6,1.2,sold off,80.95,37670791,down,yfinance (consolidated)
+VTAK,2026-06-24 09:55,3351219,69955745,36948491,6653178,20.87,1.45,1.635,73.57,27.52,4.47,23.8,sold off,6.52,114377642,up,yfinance (consolidated)
+MRNO,2026-06-24 09:55,715664,7232433,80522,383291,10.11,0.2411,0.2402,-5.8,5.83,0.27,0.4,sold off,5.96,1737230,down,yfinance (consolidated)
