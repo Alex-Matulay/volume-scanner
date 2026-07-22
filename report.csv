@@ -1,50 +1,54 @@
 symbol,date,avg_volume,last_volume,prev_volume,avg_volume_10d,rvol,open,close,pct_change,day_range_pct,range_vs_avg,buy_vol_pct,flow,vol_zscore,dollar_vol,direction,notes,earnings_date,near_spike,eps_surprise,rev_yoy,record_quarter,earnings_note
-VIVK,2026-07-21,574161,139964636,1324000,1041461,243.77,4.7499,2.58,49.13,276.74,6.56,1.3,sold off,153.38,361108750,up,yfinance (consolidated),,False,,-47.9,False,-48% YoY rev
-SLGB,2026-07-21,810195,180183302,8913600,1007540,222.39,1.115,0.9799,92.51,43.89,6.53,39.5,mixed,87.62,176561618,up,yfinance (consolidated),,False,,,False,
-JUNS,2026-07-21,3206570,345310972,656400,910000,107.69,0.2261,0.1697,2.85,49.38,4.03,17.5,sold off,64.33,58599270,up,yfinance (consolidated),,False,,,False,
-GREE,2026-07-21,375515,13890814,1070800,445760,36.99,2.15,2.91,36.62,30.93,4.36,84.4,bought up,56.52,40422269,up,yfinance (consolidated),,False,,8.3,True,record revenue (5q high); +8% YoY rev
-MWC,2026-07-21,101695,3399490,154000,109670,33.43,1.05,1.11,-34.32,45.95,1.69,64.7,mixed,31.55,3773433,down,yfinance (consolidated),,False,,,False,
-HIHO,2026-07-21,1636955,51588238,31656500,3190010,31.51,1.378,1.07,15.05,34.58,5.0,16.2,sold off,7.07,55199417,up,yfinance (consolidated),,False,,-51.7,False,-52% YoY rev
-UTZ,2026-07-21,1987840,61811276,1728900,1878260,31.09,14.08,14.06,88.72,0.64,0.28,11.1,sold off,91.55,869066566,up,yfinance (consolidated),,False,,2.6,False,+3% YoY rev
-CLBK,2026-07-21,1645195,50599130,16768400,2793850,30.76,10.75,11.08,-54.78,3.43,0.57,100.0,bought up,12.58,560638356,down,yfinance (consolidated),,False,,14.2,False,+14% YoY rev
-LBGJ,2026-07-21,5082110,148362752,91934600,10082530,29.19,0.1,0.0599,-73.02,78.63,0.15,14.9,sold off,7.0,8886928,down,yfinance (consolidated),,False,,,False,
-CHAI,2026-07-21,513185,12598073,297000,373410,24.55,0.4,0.3905,-13.22,14.67,0.74,52.7,mixed,19.5,4919547,down,yfinance (consolidated),,False,,-84.8,False,-85% YoY rev
-KIDZ,2026-07-21,11288305,271818988,332000,2035430,24.08,0.977,0.56,35.92,94.64,3.68,9.4,sold off,6.24,152218633,up,yfinance (consolidated),,False,,-36.4,False,-36% YoY rev
-RCON,2026-07-21,1069405,25279778,20526600,2070800,23.64,0.346,0.4293,10.08,24.95,1.91,100.0,bought up,5.29,10852608,up,yfinance (consolidated),,False,,,False,
-AEHL,2026-07-21,560285,11158368,227600,996330,19.92,0.6844,0.6456,-3.64,24.09,1.47,20.0,sold off,6.16,7203842,down,yfinance (consolidated),,False,,,False,
-ZNB,2026-07-21,1750190,34627192,280300,1601060,19.78,0.4,0.3756,-8.39,10.81,0.63,13.5,sold off,7.59,13005973,down,yfinance (consolidated),,False,,,False,
-IPW,2026-07-21,923725,15589613,147200,351880,16.88,0.9151,0.9,0.11,69.89,2.24,14.1,sold off,9.83,14030651,up,yfinance (consolidated),,False,,-81.7,False,-82% YoY rev
-PAPL,2026-07-21,434160,5757978,7769100,814340,13.26,0.9588,0.7602,-13.42,38.69,4.35,47.7,mixed,3.08,4377215,down,yfinance (consolidated),,False,,-15.0,False,-15% YoY rev
-CPHI,2026-07-21,6553765,81120887,1096400,13034970,12.38,0.86,8.1,790.11,226.87,90.52,39.7,mixed,3.92,657079215,up,yfinance (consolidated),,False,,-13.4,False,-13% YoY rev
-MGY,2026-07-21,3119680,33406736,6994400,2400230,10.71,24.13,25.09,-1.72,4.52,1.41,90.7,bought up,13.49,838175011,down,yfinance (consolidated),,False,,2.3,True,record revenue (5q high); +2% YoY rev
-CRNT,2026-07-21,510735,5311252,387900,389400,10.4,2.3,2.28,7.55,7.46,1.27,41.2,mixed,23.09,12109654,up,yfinance (consolidated),,False,,-4.1,False,-4% YoY rev
-CTXR,2026-07-21,206745,1866651,311700,207410,9.03,0.4928,0.5455,13.41,16.43,2.35,58.8,mixed,18.4,1018258,up,yfinance (consolidated),,False,,,False,
-PYPD,2026-07-21,252145,2205754,162300,224810,8.75,4.79,3.74,-27.38,29.95,3.14,1.8,sold off,19.84,8249519,down,yfinance (consolidated),,False,,,False,
-BEEM,2026-07-21,514160,4327959,326600,479470,8.42,1.04,1.08,5.88,6.48,0.89,85.7,bought up,14.05,4674195,up,yfinance (consolidated),,False,,-50.5,False,-51% YoY rev
-GSUN,2026-07-21,6754225,47158360,209100,447890,6.98,0.2609,0.253,1.2,87.11,3.69,16.4,sold off,1.49,11931064,up,yfinance (consolidated),,False,,,False,
-ROAD,2026-07-21,926775,6354762,1748600,1112210,6.86,102.61,103.21,0.74,4.09,0.71,58.1,mixed,9.51,655874980,up,yfinance (consolidated),,False,,34.6,False,+35% YoY rev
-DHR,2026-07-21,4255840,24587215,6202200,3923840,5.78,168.835,179.01,-10.99,7.44,2.66,98.1,bought up,18.33,4401357222,down,yfinance (consolidated),,False,,3.7,False,+4% YoY rev
-IPCX,2026-07-21,59310,320271,0,78640,5.4,10.4,10.41,0.1,0.19,1.7,100.0,bought up,2.49,3334021,up,yfinance (consolidated),,False,,,False,
-NSA,2026-07-21,1093165,5869111,1603600,1396650,5.37,44.2,43.41,-1.74,2.56,1.12,31.5,sold off,6.93,254778107,down,yfinance (consolidated),,False,,-1.6,False,-2% YoY rev
-XXI,2026-07-21,1104605,5925253,1323000,861480,5.36,5.04,4.92,-7.52,19.11,3.29,68.6,bought up,13.16,29152245,down,yfinance (consolidated),,False,,,False,
-CCTG,2026-07-21,2125075,10221296,170300,232640,4.81,0.8688,0.8498,9.65,39.73,2.27,25.9,sold off,1.4,8686057,up,yfinance (consolidated),,False,,,False,
-LSAK,2026-07-21,131690,632446,83000,85470,4.8,4.8,4.75,-0.21,2.21,0.74,28.6,sold off,4.58,3004118,down,yfinance (consolidated),,False,,13.4,False,+13% YoY rev
-HAS,2026-07-21,2067155,7883746,5458000,2118990,3.81,84.51,88.78,8.81,10.3,4.65,53.3,mixed,6.39,699918960,up,yfinance (consolidated),,False,,12.7,False,+13% YoY rev
-NIKI,2026-07-21,53589,202991,956000,104024,3.79,7.75,9.54,8.04,31.24,3.77,83.9,bought up,0.7,1936534,up,yfinance (consolidated),,False,,,False,
-RPT,2026-07-21,153860,572786,358700,183530,3.72,12.11,12.27,15.43,7.42,1.51,28.6,sold off,2.19,7028084,up,yfinance (consolidated),,False,,,False,
-EFX,2026-07-21,1616330,5975494,3035700,1446830,3.7,158.94,173.0,-3.93,11.16,3.22,93.2,bought up,8.77,1033760462,down,yfinance (consolidated),,False,,14.3,True,record revenue (5q high); +14% YoY rev
-HOVR,2026-07-21,1217690,4380002,1172400,1377570,3.6,1.7,1.99,20.24,16.83,2.44,86.6,bought up,3.88,8716204,up,yfinance (consolidated),,False,,,False,
-VYNE,2026-07-21,1475620,5302307,2243500,2756610,3.59,0.784,0.8927,10.48,13.55,3.26,94.8,bought up,1.08,4733369,up,yfinance (consolidated),,False,,-57.4,False,-57% YoY rev
-JZXN,2026-07-21,7631005,27018851,198100,15085540,3.54,1.15,1.93,67.83,64.76,6.15,64.8,mixed,0.59,52146381,up,yfinance (consolidated),,False,,,False,
-CCRN,2026-07-20,663170,2328600,2813600,640430,3.51,13.25,13.25,0.08,0.15,0.82,50.0,mixed,2.7,30853950,up,yfinance (consolidated),,False,,-17.8,False,-18% YoY rev
-PKE,2026-07-21,321955,1118688,295200,243760,3.47,36.66,35.06,7.35,14.87,2.68,11.4,sold off,5.1,39221202,up,yfinance (consolidated),,False,,42.8,True,record revenue (5q high); +43% YoY rev
-TPC,2026-07-21,589980,2034200,306700,461580,3.45,85.75,86.78,7.75,4.08,1.04,51.4,mixed,3.52,176527873,up,yfinance (consolidated),,False,,11.5,False,+11% YoY rev
-MMM,2026-07-21,3184095,10995497,4063900,2898710,3.45,169.09,170.76,7.32,4.18,1.9,24.6,sold off,6.35,1877591007,up,yfinance (consolidated),,False,,1.3,False,+1% YoY rev
-NAMM,2026-07-21,259995,886704,133900,234500,3.41,1.43,1.6,14.29,23.09,3.17,67.5,bought up,5.44,1418726,up,yfinance (consolidated),,False,,,False,
-FWRD,2026-07-21,773385,2637412,466400,578870,3.41,15.15,16.21,22.8,9.65,1.61,98.7,bought up,4.51,42752446,up,yfinance (consolidated),,False,,-5.1,False,-5% YoY rev
-ALBT,2026-07-21,2732210,9300640,508100,5097020,3.4,0.2821,0.282,-1.4,16.24,1.44,45.9,mixed,0.98,2622780,down,yfinance (consolidated),,False,,,False,
-CALX,2026-07-21,1378285,4612035,1885600,1184600,3.35,35.19,37.47,-2.29,9.02,2.18,94.7,bought up,5.97,172812957,down,yfinance (consolidated),,False,,27.1,True,record revenue (5q high); +27% YoY rev
-AMG,2026-07-21,268905,854529,109700,205370,3.18,368.21,340.58,-6.98,13.34,4.65,27.4,sold off,5.28,291035475,down,yfinance (consolidated),,False,,9.7,False,+10% YoY rev
-SMBK,2026-07-21,116195,369728,101100,89340,3.18,48.25,48.6,1.95,4.12,1.55,47.0,mixed,2.59,17968780,up,yfinance (consolidated),,False,,14.9,True,record revenue (5q high); +15% YoY rev
-RDGT,2026-07-21,6348920,19567612,12045200,1882440,3.08,1.8,1.47,-6.96,29.34,1.52,23.5,sold off,0.65,28764390,down,yfinance (consolidated),,False,,,False,
-AGIO,2026-07-21,1105885,3403677,635500,1019700,3.08,35.766,37.36,-6.74,10.01,2.33,46.3,mixed,2.79,127161374,down,yfinance (consolidated),,False,,137.7,True,record revenue (5q high); +138% YoY rev
+WETO,2026-07-22,210275,66008656,95200,157360,313.92,0.186,0.1401,-82.49,49.11,0.67,12.9,sold off,146.48,9247812,down,yfinance (consolidated),,False,,,False,
+PASW,2026-07-22,84520,19796223,9400,60010,234.22,0.1528,0.1304,-11.29,78.83,10.18,19.8,sold off,324.19,2581427,down,yfinance (consolidated),,False,,,False,
+LABT,2026-07-22,343080,78854403,47400,228170,229.84,6.5,3.41,83.33,112.9,7.48,10.6,sold off,300.11,268893520,up,yfinance (consolidated),,False,,,False,
+STKH,2026-07-22,56400,5173118,48600,59950,91.72,0.4905,0.5602,14.8,15.03,1.4,83.4,bought up,169.77,2897980,up,yfinance (consolidated),,False,,,False,
+HKPD,2026-07-22,302970,21394639,170100,554490,70.62,0.3349,0.3528,-7.16,20.66,1.61,58.7,mixed,22.34,7548028,down,yfinance (consolidated),,False,,,False,
+MTEN,2026-07-22,447935,28306449,115600,398480,63.19,1.08,1.25,14.68,77.6,5.83,27.8,sold off,92.54,35383061,up,yfinance (consolidated),,False,,,False,
+MWC,2026-07-22,275885,9431757,3582400,464200,34.19,1.21,1.62,45.95,42.59,2.26,63.8,mixed,11.66,15279446,up,yfinance (consolidated),,False,,,False,
+CHAI,2026-07-22,3232410,109179668,54888700,5712860,33.78,0.6173,0.5,27.88,34.32,2.25,31.2,sold off,8.7,54589834,up,yfinance (consolidated),,False,,-84.8,False,-85% YoY rev
+AEHL,2026-07-22,1839190,57751570,25708800,3554640,31.4,0.7133,0.5568,-14.34,80.82,4.11,3.7,sold off,9.52,32156074,down,yfinance (consolidated),,False,,,False,
+APXT,2026-07-22,165665,4402574,1060500,201940,26.58,10.17,10.15,0.79,0.57,2.91,34.4,sold off,14.52,44686124,up,yfinance (consolidated),,False,,,False,
+ZCMD,2026-07-22,4879878,126952639,120600,938850,26.02,2.26,4.29,191.84,229.14,21.7,22.0,sold off,13.03,544626816,up,yfinance (consolidated),,False,,,False,
+KSCP,2026-07-22,803465,18468003,1353100,1020520,22.99,1.49,2.08,45.45,38.58,5.32,73.8,bought up,18.42,38413444,up,yfinance (consolidated),,False,,106.2,True,record revenue (5q high); +106% YoY rev
+ZBAO,2026-07-22,21074060,482245510,1926800,41979410,22.88,0.1706,0.262,44.75,97.33,2.75,40.0,mixed,6.34,126348320,up,yfinance (consolidated),,False,,,False,
+SNTG,2026-07-22,209070,4420663,4085900,412620,21.14,2.33,2.13,1.91,39.91,8.15,14.1,sold off,4.62,9416012,up,yfinance (consolidated),,False,,,False,
+CYCU,2026-07-22,678435,14249885,778300,869830,21.0,0.2832,0.31,8.01,60.52,2.96,26.7,sold off,27.28,4417464,up,yfinance (consolidated),,False,,-15.5,False,-16% YoY rev
+LICN,2026-07-22,1131060,23573556,125200,98640,20.84,1.25,0.9027,-21.5,113.54,2.98,19.3,sold off,6.54,21279849,down,yfinance (consolidated),,False,,,False,
+VSME,2026-07-22,74095,1375405,29800,44910,18.56,1.14,1.38,15.0,57.25,3.61,30.4,sold off,21.29,1898058,up,yfinance (consolidated),,False,,,False,
+BDRX,2026-07-22,231165,3470385,58200,27090,15.01,1.71,1.71,-3.39,10.35,0.69,33.8,sold off,3.6,5934358,down,yfinance (consolidated),,False,,,False,
+OTLY,2026-07-22,76815,1018773,177700,59200,13.26,9.82,10.78,19.12,24.49,4.98,36.4,mixed,17.85,10982372,up,yfinance (consolidated),,False,,15.2,True,record revenue (5q high); +15% YoY rev
+AGPU,2026-07-22,254830,3031858,895100,319740,11.9,9.47,7.11,-25.47,40.24,3.68,17.3,sold off,12.26,21556510,down,yfinance (consolidated),,False,,-68.0,False,-68% YoY rev
+ADVB,2026-07-22,2885325,29416166,1828700,5756660,10.2,8.32,12.25,73.02,86.94,14.55,39.2,mixed,2.25,360348033,up,yfinance (consolidated),,False,,,False,
+LBGJ,2026-07-22,13540695,132793250,169207500,27002050,9.81,0.0469,0.0345,-42.5,47.83,0.05,6.1,sold off,2.84,4581367,down,yfinance (consolidated),,False,,,False,
+BLFS,2026-07-22,1084940,9725369,577000,660060,8.96,29.68,31.15,6.71,5.92,1.49,81.4,bought up,8.86,302945240,up,yfinance (consolidated),,False,,24.7,False,+25% YoY rev
+RANI,2026-07-22,712265,6271779,591100,752730,8.81,0.715,0.8967,29.77,26.2,4.54,90.1,bought up,17.14,5623904,up,yfinance (consolidated),,False,,893.0,True,record revenue (5q high); +893% YoY rev
+PAG,2026-07-22,306030,2452818,266600,316030,8.01,215.0,214.57,9.93,2.94,1.21,28.3,sold off,27.73,526301176,up,yfinance (consolidated),,False,,-1.1,False,-1% YoY rev
+BEP,2026-07-22,680340,4054613,540500,704160,5.96,32.76,32.2,0.06,6.91,2.58,18.7,sold off,14.6,130558541,up,yfinance (consolidated),,False,,-4.2,False,-4% YoY rev
+NG,2026-07-22,4559205,25106960,2552300,3724640,5.51,5.95,6.21,10.3,13.12,2.35,50.3,mixed,6.19,155914222,up,yfinance (consolidated),,False,,,False,
+LXEO,2026-07-22,865700,4655012,331100,710420,5.38,4.72,4.87,4.51,7.56,1.14,62.5,mixed,9.22,22669907,up,yfinance (consolidated),,False,,,False,
+PEGA,2026-07-22,2646010,14008838,7407200,2902970,5.29,25.32,25.99,-16.0,9.16,1.7,37.4,mixed,7.62,364089696,down,yfinance (consolidated),,False,,-9.6,False,-10% YoY rev
+CEPO,2026-07-22,66425,318842,14900,59440,4.8,10.63,10.65,0.09,0.28,0.1,66.7,bought up,4.87,3395667,up,yfinance (consolidated),,False,,,False,
+UTZ,2026-07-22,5001350,21415742,61827500,7931440,4.28,14.1,14.06,0.0,0.43,0.19,16.7,sold off,1.23,301105341,flat,yfinance (consolidated),,False,,2.6,False,+3% YoY rev
+BGT,2026-07-22,103340,420331,77800,105900,4.07,10.67,10.87,1.49,2.39,3.11,61.5,mixed,9.3,4568997,up,yfinance (consolidated),,False,,,False,
+BIP,2026-07-22,725435,2939732,757100,660590,4.05,39.7,40.25,1.72,2.39,1.13,56.3,mixed,8.93,118324213,up,yfinance (consolidated),,False,,16.9,False,+17% YoY rev
+BKU,2026-07-22,1098515,4403345,1118200,826820,4.01,45.98,45.94,-4.43,4.44,1.79,80.9,bought up,6.43,202289663,down,yfinance (consolidated),,False,,7.2,False,+7% YoY rev
+DYN,2026-07-22,2192555,8761595,1373700,1831580,4.0,22.0,23.21,-2.6,7.06,1.26,91.5,bought up,7.15,203356611,down,yfinance (consolidated),,False,,,False,
+SMCI,2026-07-22,41514380,162073657,51156400,31102750,3.9,28.93,30.56,19.84,12.38,2.26,54.4,mixed,7.24,4952970871,up,yfinance (consolidated),,False,,122.7,False,+123% YoY rev
+WAB,2026-07-22,840665,3262143,1025800,738360,3.88,276.11,290.0,10.04,8.27,3.59,77.4,bought up,8.18,946021470,up,yfinance (consolidated),,False,,13.0,False,+13% YoY rev
+GLNG,2026-07-22,1004560,3875795,1086200,773270,3.86,49.83,49.73,-0.06,2.98,1.22,15.5,sold off,6.96,192743283,down,yfinance (consolidated),,False,,108.7,True,record revenue (5q high); +109% YoY rev
+KUST,2026-07-22,13624540,51981729,4041100,10077690,3.82,1.17,1.41,46.87,53.18,2.8,41.3,mixed,1.41,73294236,up,yfinance (consolidated),,False,,38.1,False,+38% YoY rev
+BEPC,2026-07-22,1268665,4828021,981800,1132620,3.81,34.1,32.75,-4.16,6.79,2.22,24.3,sold off,11.09,158117687,down,yfinance (consolidated),,False,,-2.6,False,-3% YoY rev
+COOK,2026-07-22,74800,275044,45100,77070,3.68,68.635,66.4,-3.91,6.18,0.63,34.2,sold off,3.7,18262922,down,yfinance (consolidated),,False,,-34.3,False,-34% YoY rev
+IRS,2026-07-22,110705,399653,156800,99910,3.61,15.39,15.59,1.43,3.78,1.0,72.9,bought up,4.05,6230590,up,yfinance (consolidated),,False,,-4.4,False,-4% YoY rev
+SRG,2026-07-22,188805,681709,305700,191160,3.61,2.5,2.37,-5.2,8.65,2.32,41.5,mixed,3.41,1615650,down,yfinance (consolidated),,False,,-55.4,False,-55% YoY rev
+EDRY,2026-07-22,56220,202517,431200,76240,3.6,24.97,24.74,2.57,7.84,1.33,86.6,bought up,1.63,5010270,up,yfinance (consolidated),,False,,38.9,False,+39% YoY rev
+MCB,2026-07-22,153325,546128,188900,123500,3.56,87.3,90.19,-8.96,5.95,2.2,69.0,bought up,3.57,49255285,down,yfinance (consolidated),,False,,23.0,True,record revenue (5q high); +23% YoY rev
+TX,2026-07-22,483195,1641599,383200,533910,3.4,44.91,46.25,3.14,3.74,1.44,80.9,bought up,5.71,75923953,up,yfinance (consolidated),,False,,0.0,False,+0% YoY rev
+VTMX,2026-07-22,74510,247332,35200,50880,3.32,34.0,34.03,0.71,1.95,0.83,57.9,mixed,2.07,8416707,up,yfinance (consolidated),,False,,,False,
+TEL,2026-07-22,2340300,7772479,3172700,2292150,3.32,199.33,200.28,-4.18,5.31,1.8,94.2,bought up,8.68,1556672084,down,yfinance (consolidated),,False,,14.5,False,+15% YoY rev
+PRPO,2026-07-22,77030,253937,85100,122970,3.3,24.5,23.48,-0.93,9.28,1.06,41.7,mixed,3.04,5962440,down,yfinance (consolidated),,False,,36.2,False,+36% YoY rev
+ACOG,2026-07-22,72035,233743,112700,85990,3.24,7.97,7.9,0.13,12.15,1.89,21.9,sold off,3.34,1846569,up,yfinance (consolidated),,False,,20.7,True,record revenue (5q high); +21% YoY rev
+NCT,2026-07-22,394690,1253829,1065700,620750,3.18,2.93,2.91,1.04,6.87,0.61,15.0,sold off,2.27,3648642,up,yfinance (consolidated),,False,,,False,
+ADTN,2026-07-22,1721140,5338074,1576200,1364810,3.1,9.5,10.45,-13.92,11.58,1.7,98.3,bought up,3.98,55782872,down,yfinance (consolidated),,False,,15.5,False,+15% YoY rev
+MGY,2026-07-22,4740680,14302610,36975400,5921310,3.02,25.45,25.6,2.03,2.13,0.66,37.6,mixed,1.21,366146821,up,yfinance (consolidated),,False,,2.3,True,record revenue (5q high); +2% YoY rev
