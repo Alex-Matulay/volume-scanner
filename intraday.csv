@@ -1,4 +1,5 @@
 symbol,date,avg_volume,last_volume,prev_volume,avg_volume_10d,rvol,open,close,pct_change,day_range_pct,range_vs_avg,buy_vol_pct,flow,vol_zscore,dollar_vol,direction,notes
-FIRY,2026-07-28 09:40,90031,11585050,119632,81970,128.68,14.0,12.35,47.55,20.77,4.5,4.0,sold off,362.36,143075371,up,yfinance (consolidated)
-ONFO,2026-07-28 09:40,11306940,58102462,1514953,7038091,5.14,0.1386,0.1379,37.9,19.87,0.62,10.0,sold off,1.46,8012329,up,yfinance (consolidated)
-PMN,2026-07-28 09:40,110884,412704,79665,133258,3.72,14.06,13.22,12.37,14.45,1.44,5.1,sold off,4.16,5455946,up,yfinance (consolidated)
+FIRY,2026-07-28 09:55,90031,13064326,119632,81970,145.11,12.85,11.6999,39.78,25.56,5.24,83.8,bought up,408.99,152851303,up,yfinance (consolidated)
+ONFO,2026-07-28 09:55,11306940,76570945,1514953,7038091,6.77,0.1386,0.1513,51.3,25.58,0.87,31.7,sold off,2.04,11585183,up,yfinance (consolidated)
+EGG,2026-07-28 09:50,69505,317869,319700,96764,4.57,2.04,4.1,99.03,50.24,2.56,100.0,bought up,3.27,1303262,up,yfinance (consolidated)
+OPK,2026-07-28 09:55,2409369,9501523,2042026,2334703,3.94,1.38,1.57,25.6,13.38,3.78,97.2,bought up,7.96,14917391,up,yfinance (consolidated)
