@@ -1,7 +1,6 @@
 symbol,date,avg_volume,last_volume,prev_volume,avg_volume_10d,rvol,open,close,pct_change,day_range_pct,range_vs_avg,buy_vol_pct,flow,vol_zscore,dollar_vol,direction,notes
 FTHM,2026-09-25 15:55,67349,39880658,21294,38558,592.14,0.64,0.6,15.19,14.35,2.26,23.7,sold off,569.28,23928395,up,yfinance (consolidated)
 AXG,2026-09-25 15:55,337022,95974775,887998,541830,284.77,1.21,0.1997,-84.76,530.8,5.98,47.5,mixed,280.93,19166162,down,yfinance (consolidated)
-AIFF,2026-09-25 15:55,711721,135845269,223817,1356839,190.87,1.705,2.015,67.92,32.26,7.4,25.0,sold off,55.79,273728231,up,yfinance (consolidated)
 RDGT,2026-09-25 15:55,110824,8415583,16450,49280,75.94,0.93,0.8076,-10.83,62.53,5.57,45.1,mixed,40.13,6796425,down,yfinance (consolidated)
 NIVF,2026-09-25 15:55,170731,9741973,279412,197679,57.06,0.53,0.5694,7.45,67.63,2.79,36.6,sold off,57.36,5547079,up,yfinance (consolidated)
 LFS,2026-09-25 15:55,57603,2973740,52042,45749,51.62,2.2,2.14,-0.47,14.95,4.67,13.9,sold off,85.48,6363803,down,yfinance (consolidated)
