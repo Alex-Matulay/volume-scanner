@@ -1,27 +1,29 @@
 symbol,date,avg_volume,last_volume,prev_volume,avg_volume_10d,rvol,open,close,pct_change,day_range_pct,range_vs_avg,buy_vol_pct,flow,vol_zscore,dollar_vol,direction,notes,earnings_date,near_spike,eps_surprise,rev_yoy,record_quarter,earnings_note
-BYSI,2026-09-28,80300,8196700,15600,26230,102.08,0.751,1.12,44.14,34.73,7.29,94.9,bought up,44.57,9180304,up,yfinance (consolidated),2022-04-14,False,-10.8,,False,last earnings 2022-04-14; EPS miss -10.8%
-YMT,2026-09-28,172155,16078400,257600,207310,93.39,1.79,1.77,-2.21,4.8,0.32,58.8,mixed,63.82,28458767,down,yfinance (consolidated),,False,,,False,
-KOD,2026-09-28,857670,38552000,2277300,1083440,44.95,61.71,89.92,177.96,39.23,18.75,83.4,bought up,83.08,3466595769,up,yfinance (consolidated),2026-08-13,False,-9.8,,False,last earnings 2026-08-13; EPS miss -9.8%
-SOAR,2026-09-28,24549145,999814700,1028600,21548650,40.73,0.379,0.319,77.22,48.59,6.22,3.9,sold off,24.23,318940895,up,yfinance (consolidated),,False,,-96.1,False,-96% YoY rev
-ONFO,2026-09-28,180255,5901000,823100,191380,32.74,0.904,1.06,16.48,24.53,3.67,84.6,bought up,34.36,6255059,up,yfinance (consolidated),2023-08-14,False,-73.3,-52.4,False,-52% YoY rev; last earnings 2023-08-14; EPS miss -73.3%
-NIVF,2026-09-28,675366,13989500,10527600,1245870,20.71,0.459,0.345,-38.39,45.51,1.08,15.9,sold off,5.73,4826377,down,yfinance (consolidated),,False,,,False,
-LONA,2026-09-28,69840,948900,343700,75240,13.59,3.3,2.87,-11.69,37.98,1.42,60.6,mixed,9.7,2723342,down,yfinance (consolidated),2026-08-14,False,41.0,,False,last earnings 2026-08-14; EPS beat +41.0%
-SDEV,2026-09-28,1554335,14831100,13799000,2758650,9.54,1.74,1.57,5.37,20.38,2.77,31.3,sold off,4.24,23284827,up,yfinance (consolidated),2025-04-02,False,-66.2,,False,last earnings 2025-04-02; EPS miss -66.2%
-FFAI,2026-09-28,2157340,20317100,23216800,3380060,9.42,1.78,1.41,-12.42,32.62,2.37,15.2,sold off,3.65,28647110,down,yfinance (consolidated),2026-08-13,False,-46.0,1448.1,True,record revenue (5q high); +1448% YoY rev; last earnings 2026-08-13; EPS miss -46.0%
-MX,2026-09-28,836700,6845800,4447300,1368660,8.18,3.89,3.79,14.85,10.03,2.87,34.2,sold off,4.78,25945581,up,yfinance (consolidated),2026-04-28,False,50.0,-6.1,False,-6% YoY rev; last earnings 2026-04-28; EPS beat +50.0%
-GETY,2026-09-28,3577100,27985400,11596800,4604270,7.82,0.143,0.083,-40.71,100.0,3.39,3.6,sold off,7.22,2322788,down,yfinance (consolidated),2026-08-10,False,-259.5,-2.5,False,-2% YoY rev; last earnings 2026-08-10; EPS miss -259.5%
-SLXN,2026-09-28,13195190,77399300,1169300,14119820,5.87,0.262,0.248,-4.62,14.52,0.65,22.2,sold off,2.33,19195026,down,yfinance (consolidated),2026-08-14,False,-143.9,,False,last earnings 2026-08-14; EPS miss -143.9%
-CAAP,2026-09-28,206810,1069000,143900,197760,5.17,23.82,26.05,9.09,9.39,3.63,91.2,bought up,10.14,27847449,up,yfinance (consolidated),2026-08-18,False,-32.7,12.0,False,+12% YoY rev; last earnings 2026-08-18; EPS miss -32.7%
-OIA,2026-09-29,167025,747939,585700,230530,4.48,5.38,5.61,4.28,5.7,3.11,75.0,bought up,4.72,4195937,up,yfinance (consolidated),,False,,,False,
-IIM,2026-09-29,175335,760769,553300,235100,4.34,10.64,10.45,-2.06,3.56,2.05,48.4,mixed,4.29,7950035,down,yfinance (consolidated),,False,,,False,
-NAUT,2026-09-28,1024795,4102500,681500,871210,4.0,1.0,1.11,15.26,16.22,2.11,66.7,bought up,3.91,4553775,up,yfinance (consolidated),2026-07-28,False,21.4,,True,record revenue (5q high); last earnings 2026-07-28; EPS beat +21.4%
-VKI,2026-09-29,154530,607046,668000,231680,3.93,7.58,7.58,-0.66,4.75,2.72,91.7,bought up,3.24,4601408,down,yfinance (consolidated),,False,,,False,
-PMO,2026-09-29,95200,372384,203300,139190,3.91,9.05,9.07,0.11,3.03,2.08,72.7,bought up,4.55,3377522,up,yfinance (consolidated),,False,,,False,
-PACB,2026-09-28,5812795,21281900,11358900,6850620,3.66,1.6,1.71,5.56,12.28,2.44,57.1,mixed,7.21,36392049,up,yfinance (consolidated),2026-08-05,False,-10.4,-1.9,False,-2% YoY rev; last earnings 2026-08-05; EPS miss -10.4%
-BGDE,2026-09-28,57500,196700,80700,74770,3.42,5.78,5.26,-8.68,19.96,1.94,43.8,mixed,4.68,1034642,down,yfinance (consolidated),2025-11-14,False,101.9,-35.5,False,-35% YoY rev; last earnings 2025-11-14; EPS beat +101.9%
-FWAC,2026-09-29,57010,188124,6200,53040,3.3,9.95,9.95,0.1,0.1,6.67,100.0,bought up,1.07,1871833,up,yfinance (consolidated),,False,,,False,
-MSGY,2026-09-28,2840875,9295100,56134200,5639570,3.27,8.4,3.13,-61.21,200.96,10.11,6.8,sold off,0.51,29093664,down,yfinance (consolidated),,False,,,False,
-WYY,2026-09-28,289625,943800,3929500,506960,3.26,5.41,5.9,7.86,14.75,0.9,85.1,bought up,0.76,5568420,up,yfinance (consolidated),2026-08-13,False,-50.0,1.9,False,+2% YoY rev; last earnings 2026-08-13; EPS miss -50.0%
-INSE,2026-09-28,221770,695700,171200,294840,3.14,4.53,3.99,-12.69,15.34,2.29,11.8,sold off,3.7,2775843,down,yfinance (consolidated),2026-08-05,False,576.6,-24.3,False,-24% YoY rev; last earnings 2026-08-05; EPS beat +576.6%
-GHRS,2026-09-28,198940,609700,180000,209420,3.06,23.48,23.42,-1.76,3.35,0.63,67.5,bought up,3.27,14279174,down,yfinance (consolidated),2026-08-06,False,30.3,,False,last earnings 2026-08-06; EPS beat +30.3%
-KMX,2026-09-28,2111125,6364600,2725200,2798950,3.01,57.17,56.55,-1.15,4.47,1.29,12.3,sold off,3.83,359918125,down,yfinance (consolidated),2026-09-29,False,58.6,6.2,True,record revenue (5q high); +6% YoY rev; last earnings 2026-09-29; EPS beat +58.6%
+EVGN,2026-09-29,209640,60317200,170800,107540,287.72,0.37,0.41,7.89,26.83,2.65,45.5,mixed,112.55,24730051,up,yfinance (consolidated),2026-08-18,False,51.7,-35.0,False,-35% YoY rev; last earnings 2026-08-18; EPS beat +51.7%
+GOW,2026-09-30,141850,20888178,249900,204650,147.26,1.758,3.18,75.69,55.66,0.94,83.6,bought up,102.15,66424407,up,yfinance (consolidated),,False,,,False,
+SDEV,2026-09-29,2261275,192551900,14831100,4230560,85.15,1.64,3.27,108.28,70.64,17.91,71.4,bought up,44.22,629644709,up,yfinance (consolidated),2025-04-02,False,-66.2,,False,last earnings 2025-04-02; EPS miss -66.2%
+ILLR,2026-09-29,405745,23088600,211800,698890,56.9,0.175,0.24,-29.2,60.42,1.54,44.8,mixed,53.23,5541263,down,yfinance (consolidated),,False,,-5.2,False,-5% YoY rev
+KALA,2026-09-29,716705,37928700,576300,243870,52.92,0.414,0.503,11.78,27.63,2.56,73.4,bought up,18.83,19078136,up,yfinance (consolidated),2025-11-19,False,-5.9,,False,last earnings 2025-11-19; EPS miss -5.9%
+NIVF,2026-09-29,1370863,55991300,13989500,2636890,40.84,0.1,0.072,-79.13,50.0,0.24,22.2,sold off,14.49,4031373,down,yfinance (consolidated),,False,,,False,
+QURE,2026-09-29,1438605,29814000,1853500,1596530,20.72,23.85,24.51,-37.33,14.4,1.63,57.8,mixed,35.4,730741146,down,yfinance (consolidated),2026-07-29,False,-51.2,11.0,True,record revenue (5q high); +11% YoY rev; last earnings 2026-07-29; EPS miss -51.2%
+NAUT,2026-09-29,1205715,22392100,4102500,1158120,18.57,1.19,1.365,22.97,37.73,5.61,55.3,mixed,20.51,30565216,up,yfinance (consolidated),2026-07-28,False,21.4,,True,record revenue (5q high); last earnings 2026-07-28; EPS beat +21.4%
+XRPN,2026-09-29,235850,3780000,403300,338060,16.03,12.1,12.9,21.99,43.26,30.38,26.5,sold off,11.0,48761998,up,yfinance (consolidated),,False,,,False,
+POLA,2026-09-29,102990,1547600,97500,73530,15.03,1.28,1.23,-2.38,16.26,2.94,55.0,mixed,11.47,1903548,down,yfinance (consolidated),2021-11-15,False,275.0,-62.4,False,-62% YoY rev; last earnings 2021-11-15; EPS beat +275.0%
+TDTH,2026-09-29,93320,1103500,217900,62610,11.82,0.89,1.14,2.7,63.51,4.28,64.1,mixed,5.02,1257989,up,yfinance (consolidated),,False,,,False,
+EFT,2026-09-30,94290,880643,169500,86260,9.34,10.41,10.68,2.3,3.75,4.91,67.5,bought up,22.97,9405267,up,yfinance (consolidated),,False,,,False,
+MSGY,2026-09-29,3302285,30282500,9295100,6565740,9.17,3.94,4.44,41.85,35.36,1.7,79.0,bought up,2.14,134454301,up,yfinance (consolidated),,False,,,False,
+NCI,2026-09-29,999590,8860900,5027300,1276640,8.86,1.36,1.26,-47.06,49.13,0.46,1.6,sold off,6.65,11164733,down,yfinance (consolidated),,False,,,False,
+FNGR,2026-09-29,15594120,109843800,5647000,16364500,7.04,0.137,0.138,-2.82,4.35,0.32,50.0,mixed,4.42,15158444,down,yfinance (consolidated),2024-01-16,False,,-92.3,False,-92% YoY rev; last earnings 2024-01-16
+LXEO,2026-09-29,1041440,6560000,1256700,1501340,6.3,3.14,3.42,8.92,17.84,2.52,72.1,bought up,6.97,22435200,up,yfinance (consolidated),2026-08-12,False,-7.7,,False,last earnings 2026-08-12; EPS miss -7.7%
+OPAL,2026-09-29,258265,1623700,343400,229850,6.29,1.8,1.77,-1.67,7.34,1.22,38.5,mixed,12.56,2873948,down,yfinance (consolidated),2026-08-10,False,149.2,3.7,False,+4% YoY rev; last earnings 2026-08-10; EPS beat +149.2%
+AIR,2026-09-29,423065,2568200,571500,541530,6.07,116.5,106.75,-7.25,13.6,3.15,22.5,sold off,8.04,274155350,down,yfinance (consolidated),2026-09-28,True,15.5,23.0,True,record revenue (5q high); +23% YoY rev; reported 2026-09-28 (1d before spike); EPS beat +15.5%
+MX,2026-09-29,1167835,6153400,6845800,2003660,5.27,3.99,3.89,2.64,13.88,3.72,18.5,sold off,2.72,23936726,up,yfinance (consolidated),2026-04-28,False,50.0,-6.1,False,-6% YoY rev; last earnings 2026-04-28; EPS beat +50.0%
+BHFAM,2026-09-30,56860,291751,41100,54130,5.13,10.23,10.09,-1.37,2.58,1.42,3.8,sold off,4.65,2943767,down,yfinance (consolidated),,False,,103.8,False,+104% YoY rev
+SMCIP,2026-09-30,701970,2770873,675600,732500,3.95,68.68,68.73,-0.01,5.99,1.47,19.7,sold off,3.44,190442110,down,yfinance (consolidated),,False,,93.2,False,+93% YoY rev
+POCI,2026-09-29,64710,248900,522500,91790,3.85,4.2,4.27,-5.74,7.96,1.58,67.6,bought up,1.68,1062802,down,yfinance (consolidated),2026-09-28,True,83.3,108.0,True,record revenue (5q high); +108% YoY rev; reported 2026-09-28 (1d before spike); EPS beat +83.3%
+VCV,2026-09-30,215425,820305,387600,293010,3.81,8.98,8.98,-0.22,2.45,1.55,0.0,sold off,4.73,7366338,down,yfinance (consolidated),,False,,,False,
+SOJF,2026-09-30,57310,197018,70500,63290,3.44,22.7,22.48,-0.75,3.45,2.14,43.2,mixed,5.47,4428964,down,yfinance (consolidated),,False,,,False,
+NESR,2026-09-29,1672755,5332100,2351500,1868650,3.19,28.62,26.49,-11.14,11.91,2.44,22.8,sold off,6.76,141247327,down,yfinance (consolidated),2026-08-10,False,24.7,59.1,True,record revenue (5q high); +59% YoY rev; last earnings 2026-08-10; EPS beat +24.7%
+SPXX,2026-09-30,208020,644821,265700,195120,3.1,18.42,18.49,0.33,0.95,0.79,45.7,mixed,7.68,11922740,up,yfinance (consolidated),,False,,,False,
+CDLR,2026-09-29,60895,184200,58100,57970,3.02,22.37,22.59,-1.35,1.55,0.83,100.0,bought up,5.01,4161078,down,yfinance (consolidated),2025-03-25,False,69.9,21.3,True,record revenue (5q high); +21% YoY rev; last earnings 2025-03-25; EPS beat +69.9%
+CCO,2026-09-29,4000520,12018000,3981100,4885350,3.0,2.36,2.34,-0.85,1.28,1.5,33.3,sold off,2.57,28122118,down,yfinance (consolidated),2026-08-05,False,11.7,8.7,False,+9% YoY rev; last earnings 2026-08-05; EPS beat +11.7%
