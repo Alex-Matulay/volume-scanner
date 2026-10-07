@@ -1,6 +1,7 @@
 symbol,date,avg_volume,last_volume,prev_volume,avg_volume_10d,rvol,open,close,pct_change,day_range_pct,range_vs_avg,buy_vol_pct,flow,vol_zscore,dollar_vol,direction,notes
 LGCL,2026-10-07 15:55,100809,45103075,46732,109024,447.41,2.49,2.84,27.64,74.65,7.35,70.3,bought up,383.41,128092729,up,yfinance (consolidated)
 SBFM,2026-10-07 15:55,428162,169508471,4184429,693926,395.9,0.4095,0.6951,76.74,164.01,15.68,58.7,mixed,172.54,117825339,up,yfinance (consolidated)
+SXTC,2026-10-07 15:55,967629,308807708,1474237,469187,319.14,3.21,2.83,130.1,272.79,18.85,35.6,sold off,102.03,873925790,up,yfinance (consolidated)
 DKI,2026-10-07 15:55,139635,44228862,98092,241632,316.75,1.27,1.71,25.74,138.6,10.1,41.5,mixed,179.26,75631355,up,yfinance (consolidated)
 CPHI,2026-10-07 15:55,223211,65218643,59591,355339,292.18,0.68,0.8794,37.15,72.44,12.01,62.6,bought up,141.48,57353275,up,yfinance (consolidated)
 IRIX,2026-10-07 15:55,50791,12602944,28068,43004,248.13,0.6854,0.8599,26.46,41.81,11.12,23.6,sold off,399.1,10837271,up,yfinance (consolidated)
