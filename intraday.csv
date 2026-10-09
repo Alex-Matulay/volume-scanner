@@ -1,4 +1,6 @@
 symbol,date,avg_volume,last_volume,prev_volume,avg_volume_10d,rvol,open,close,pct_change,day_range_pct,range_vs_avg,buy_vol_pct,flow,vol_zscore,dollar_vol,direction,notes
-OFAL,2026-10-09 09:40,910443,72297611,99885,851895,79.41,0.4808,0.5183,28.42,23.11,2.25,94.4,bought up,55.8,37471851,up,yfinance (consolidated)
-XRTX,2026-10-09 09:40,496849,13494524,16079,27759,27.16,2.06,1.895,4.7,12.11,1.32,1.6,sold off,8.08,25572122,up,yfinance (consolidated)
-SMJF,2026-10-09 09:40,730807,3604034,313056,611142,4.93,1.37,1.27,1.6,15.58,0.7,0.9,sold off,3.18,4577123,up,yfinance (consolidated)
+OFAL,2026-10-09 09:55,910443,111523677,99885,851895,122.49,0.4808,0.6077,50.57,39.46,4.51,87.4,bought up,86.46,67772937,up,yfinance (consolidated)
+XRTX,2026-10-09 09:55,496844,13935139,16079,27759,28.05,2.06,1.925,6.35,11.92,1.32,3.7,sold off,8.36,26825141,up,yfinance (consolidated)
+VIVK,2026-10-09 09:55,804047,20651067,49446,889963,25.68,6.99,5.0201,24.88,67.71,4.27,8.6,sold off,21.09,103670423,up,yfinance (consolidated)
+WFF,2026-10-09 09:55,374473,5196103,53756,498941,13.88,2.08,3.94,92.2,53.55,9.96,100.0,bought up,6.11,20472646,up,yfinance (consolidated)
+SMJF,2026-10-09 09:55,728138,3681977,313056,605805,5.06,1.27,1.29,3.2,15.34,0.7,97.2,bought up,3.26,4749750,up,yfinance (consolidated)
