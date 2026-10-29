@@ -1,6 +1,5 @@
 symbol,date,avg_volume,last_volume,prev_volume,avg_volume_10d,rvol,open,close,pct_change,day_range_pct,range_vs_avg,buy_vol_pct,flow,vol_zscore,dollar_vol,direction,notes
 CHSN,2026-10-28 15:55,91113,72446484,900697,146460,795.13,1.51,1.44,33.33,57.19,9.19,47.2,mixed,373.01,104322941,up,yfinance (consolidated)
-FTFT,2026-10-28 15:55,53479,15081181,68050,44927,282.0,1.88,2.86,56.28,49.3,4.5,56.5,mixed,514.08,43132176,up,yfinance (consolidated)
 BOOM,2026-10-28 15:55,116291,7481030,276767,141383,64.33,6.64,7.71,44.11,14.53,4.56,69.7,bought up,108.45,57678741,up,yfinance (consolidated)
 PODC,2026-10-28 15:55,69991,4498854,100465,64310,64.28,1.86,2.44,33.33,27.87,2.83,53.8,mixed,111.55,10977204,up,yfinance (consolidated)
 CDT,2026-10-28 15:55,3179065,148694624,4726869,5893138,46.77,0.09,0.0782,-2.13,32.99,0.25,4.9,sold off,27.79,11627919,down,yfinance (consolidated)
