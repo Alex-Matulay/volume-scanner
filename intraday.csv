@@ -1,6 +1,5 @@
 symbol,date,avg_volume,last_volume,prev_volume,avg_volume_10d,rvol,open,close,pct_change,day_range_pct,range_vs_avg,buy_vol_pct,flow,vol_zscore,dollar_vol,direction,notes
 HPAI,2026-11-04 15:55,86662,138684355,36579,80707,1600.28,0.3043,0.3224,34.0,15.73,2.0,81.0,bought up,1878.02,44711836,up,yfinance (consolidated)
-OMH,2026-11-04 15:55,68135,86649344,13160,26984,1271.72,2.9899,15.21,422.5,100.39,56.48,52.5,mixed,661.11,1317936525,up,yfinance (consolidated)
 FTCI,2026-11-04 15:55,208978,95867129,298073,211925,458.74,2.09,1.385,-4.48,61.37,7.31,30.6,sold off,951.43,132775972,down,yfinance (consolidated)
 CMTG,2026-11-04 15:55,639002,21299004,401907,732555,33.33,1.52,1.85,63.72,29.46,9.48,64.4,bought up,44.19,39403157,up,yfinance (consolidated)
 CVI,2026-11-04 15:55,725279,12740556,3001518,843551,17.57,47.21,43.02,-11.47,17.46,2.32,35.4,sold off,20.95,548098724,down,yfinance (consolidated)
