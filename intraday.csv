@@ -1,4 +1,4 @@
 symbol,date,avg_volume,last_volume,prev_volume,avg_volume_10d,rvol,open,close,pct_change,day_range_pct,range_vs_avg,buy_vol_pct,flow,vol_zscore,dollar_vol,direction,notes
-TGE,2026-11-09 09:40,287963,22916528,137295,282059,79.58,0.4331,0.3056,-15.13,69.86,2.27,11.4,sold off,94.01,7003290,down,yfinance (consolidated)
-CIGL,2026-11-09 09:40,856581,16167131,34029,68813,18.87,0.1552,0.1701,-6.33,12.49,0.76,99.5,bought up,7.67,2750045,down,yfinance (consolidated)
-DBGI,2026-11-09 09:40,4720140,21139834,89687251,9248660,4.48,0.203,0.1902,-32.39,9.94,0.05,0.0,sold off,0.82,4020796,down,yfinance (consolidated)
+TGE,2026-11-09 09:55,287963,23643249,137295,282059,82.11,0.4376,0.2857,-20.66,112.88,3.43,3.0,sold off,97.03,6754876,down,yfinance (consolidated)
+CIGL,2026-11-09 09:55,856581,16296097,34029,68813,19.02,0.1552,0.1638,-9.8,12.97,0.76,99.2,bought up,7.73,2669300,down,yfinance (consolidated)
+RTAC,2026-11-09 09:55,130331,649034,248104,136327,4.98,10.47,10.47,0.0,0.14,0.76,100.0,bought up,4.35,6795386,flat,yfinance (consolidated)
