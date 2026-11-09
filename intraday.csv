@@ -1,4 +1,7 @@
 symbol,date,avg_volume,last_volume,prev_volume,avg_volume_10d,rvol,open,close,pct_change,day_range_pct,range_vs_avg,buy_vol_pct,flow,vol_zscore,dollar_vol,direction,notes
-TGE,2026-11-09 09:55,287963,23643249,137295,282059,82.11,0.4376,0.2857,-20.66,112.88,3.43,3.0,sold off,97.03,6754876,down,yfinance (consolidated)
-CIGL,2026-11-09 09:55,856581,16296097,34029,68813,19.02,0.1552,0.1638,-9.8,12.97,0.76,99.2,bought up,7.73,2669300,down,yfinance (consolidated)
-RTAC,2026-11-09 09:55,130331,649034,248104,136327,4.98,10.47,10.47,0.0,0.14,0.76,100.0,bought up,4.35,6795386,flat,yfinance (consolidated)
+TGE,2026-11-09 10:15,288436,24700514,137795,282109,85.64,0.4376,0.3362,-6.64,95.93,3.43,6.2,sold off,101.63,8304312,down,yfinance (consolidated)
+CIGL,2026-11-09 10:15,856409,16449054,34029,68693,19.21,0.1552,0.166,-8.59,12.8,0.76,98.8,bought up,7.81,2730542,down,yfinance (consolidated)
+ZURA,2026-11-09 10:15,4906522,30213406,2822630,3241710,6.16,1.26,0.9802,-75.95,31.12,0.68,17.1,sold off,5.3,29615180,down,yfinance (consolidated)
+MF,2026-11-09 10:05,103065,598878,58700,89620,5.81,14.55,20.14,94.03,43.05,3.94,83.6,bought up,6.39,12061402,up,yfinance (consolidated)
+RTAC,2026-11-09 10:15,128552,679825,248104,136327,5.29,10.47,10.47,0.0,0.14,0.76,97.9,bought up,4.62,7117767,flat,yfinance (consolidated)
+XHLD,2026-11-09 10:15,5271479,18108848,239206,1164460,3.44,0.6,0.9559,67.67,40.74,2.89,78.9,bought up,0.86,17310248,up,yfinance (consolidated)
